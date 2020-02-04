@@ -3,8 +3,9 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const flash = require('flash');
 const session = require('express-session');
-const app = express();
 const passport = require('passport');
+const app = express();
+
 
 //Passport config
 require('./config/passport')(passport);
@@ -17,9 +18,13 @@ mongoose.connect(db, { useNewUrlParser: true })
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err));
 
+
 //EJS
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
+
+//Public Folder
+app.use(express.static('./public'));
 
 //BodyParser
 app.use(express.urlencoded({extended: false}));
@@ -49,8 +54,6 @@ app.use((req, res, next) => {
 //Routes
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
-
-
 
 const PORT = process.env.PORT || 5000;
 
