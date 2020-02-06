@@ -4,25 +4,50 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const path = require('path');
 const multer = require('multer');
+const mongoose = require('mongoose');
+
 
 //Set Storage Engines
 const storage = multer.diskStorage({
-    destination: '../public/uploads',
-    filename: function(req, file, callback){
-        callback(null, file.fieldname+'-'+ Date.now()+
-        path.extname(file.originalname));
+    destination: function(req, file, cb){
+        cb(null, './uploads/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname + new Date().toISOString());
     }
 });
 
+const fileFilter = (req, file, cb) => {
+    //Accept the below given types
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+        cb(null, false);
+    } else {
+        cb(null, true);
+    }
+}
+
 const upload = multer({
     storage: storage,
-    limits: {fileSize:10000000}
-}).single('myFile');
+    //limits: {
+    //    filesize: 1024 * 1024 * 5
+    //},
+    //fileFilter: fileFilter
+});
+
+//DB config
+const db = require('../config/keys').MongoURIFiles;
+
+//Connect to Mongo
+mongoose.connect(db, { useNewUrlParser: true })
+    .then(() => console.log('MongoDB Connected...'))
+    .catch(err => console.log(err));
 
 //User model
 const User = require('../models/User');
 
+const File = require('../models/File');
 
+//FGet methods
 router.get('/login', (req, res) => {
     res.render('login');
 });
@@ -39,7 +64,7 @@ router.get('/dashboard', (req, res) => {
     res.render('dashboard');
 });
 
-
+//Post Methods
 //register handler
 router.post('/register', (req, res) => {
     const {name, email, password, password2} = req.body;
@@ -112,16 +137,25 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
-router.post('/upload', (req, res) => {
-    upload(req, res, (err) =>{ 
-        if(err){
-            res.render('dashboard',{
-                msg: err
-            });
-        } else{
-            console.log(req.file);
-        }
-    });
+//Uploading files
+router.post('/upload', upload.single("myFile"),(req, res, next) => {
+    console.log(req.file)
+    
+    const newFile = new File({
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        encoding: req.file.encoding,
+        mimetype: req.file.mimetype,
+        destination: req.file.destination,
+        filename: req.file.filename,
+        path: req.file.path,
+        size: req.file.size
+    })
+    
+    newFile.save().then( user => {
+        req.flash('success_msg', 'File uploaded.');
+        res.redirect('/users/dashboard');
+    }).catch(err => console.log(err));    
 });
 
 module.exports = router;
