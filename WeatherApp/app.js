@@ -32,7 +32,7 @@ app.use(express.urlencoded({extended: false}));
 //Epress session
 app.use(session({
     secret: 'secret',
-    resave: true,
+    resave: false,
     saveUninitialized: true,
 }));
 
@@ -54,6 +54,8 @@ app.use((req, res, next) => {
 //Routes
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
+//Endpoint for apis....
+app.use('/apis', require('./routes/users'));
 
 const PORT = process.env.PORT || 5000;
 

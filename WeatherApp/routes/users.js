@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const path = require('path');
+//const path = require('path');
 const multer = require('multer');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 
 //Set Storage Engines
@@ -34,13 +35,21 @@ const upload = multer({
     //fileFilter: fileFilter
 });
 
-//DB config
-const db = require('../config/keys').MongoURIFiles;
-
-//Connect to Mongo
-mongoose.connect(db, { useNewUrlParser: true })
-    .then(() => console.log('MongoDB Connected...'))
-    .catch(err => console.log(err));
+//Token FORMAT: Authorization : Bearer <access_token>
+function verifyToken(req, res, next){ 
+    //Get auth head value
+    const token = req.header('auth-token');
+    if(!token){
+        return res.sendStatus(401);
+    }
+    try{
+        const verify = jwt.token(token, 'secretkey');
+        req.user = verify;
+    } catch (err){
+        res.sendStatus(400);
+    }
+    next();
+}; 
 
 //User model
 const User = require('../models/User');
@@ -60,9 +69,19 @@ router.get('/logout', (req, res) => {
     res.redirect('/users/login');
 })
 
-router.get('/dashboard', (req, res) => {
-    res.render('dashboard');
+router.get('/dashboard', verifyToken, (req, res) => {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        } else{
+            res.render('dashboard');        
+        }
+    });
+    
 });
+
+
+
 
 //Post Methods
 //register handler
@@ -94,6 +113,7 @@ router.post('/register', (req, res) => {
         .then(user => {
             if(user) {
                 //User exist
+                console.log(req.body)
                 errors.push({msg : 'Email already registered'});
                 res.render('register', {
                     errors,
@@ -128,14 +148,58 @@ router.post('/register', (req, res) => {
     }
 });
 
+/*
+//Login handdling
+router.post('/login', (req, res, next) => {
+    User.findOne({
+        email: req.body.email, 
+        password: req.body.password
+    }, (err, user) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if(!user) {
+            console.log(user);
+            return res.status(500).send();
+        }
+        req.session.user = user;
+        return res.status(200).send();
+    });
+});
+/*
 //Login handdling
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
         successRedirect: '/users/dashboard',
         failureRedirect: '/users/login',
         failureFlash: true
+        //session: false 
     })(req, res, next);
 });
+*/
+
+router.post('/login', async(req, res) =>{
+    const user = await User.findOne({
+        email: req.body.email
+    });
+
+    if (!user){
+        return res.sendStatus(403);
+    }
+    
+    const pass = await bcrypt.compare(user.password, req.body.password);
+    if(!pass){
+        res.sendStatus(403);
+    }
+
+    const token = jwt.sign({_id: user._id},'secretkey');
+    res.header('auth-token', token).send(token);
+    res.redirect('/users/dashboard')
+});
+
+
 
 //Uploading files
 router.post('/upload', upload.single("myFile"),(req, res, next) => {
