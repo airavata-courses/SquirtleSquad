@@ -102,12 +102,14 @@ producer.on('ready', function () {
 let i = 0;
 app.post('/send', (req, res) => {
     //console.log(req.body, i);
+    let result = '';
     i = i+1;
     publish('test',req.body);
     consumer.on('message', function (message) {
-      console.log(message);
-      res.json(message);
+      console.log(message);W
+      result = message;
     });
+    res.json(result);
 });
 
 
