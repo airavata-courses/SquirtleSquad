@@ -25,7 +25,7 @@ class Home extends Component{
           body: JSON.stringify(data)
         })
           .then(response => {
-            console.log("res: ",response.json());
+            console.log("res: ",response);
           })
           .catch(err => console.log(err));
       };

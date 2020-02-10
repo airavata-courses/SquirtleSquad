@@ -69,35 +69,49 @@ const kafka = require('kafka-node');
 
 
 let Producer = kafka.Producer,
+Consumer = kafka.Consumer,
 client = new kafka.KafkaClient(),
-producer = new Producer(client);
+producer = new Producer(client),
+consumer = new Consumer(client,[{ topic: 'test_result'}],{autoCommit: true});
 
+
+
+consumer.on('error', function (err) {
+  console.log(err);
+});
+
+producer.on('ready', function () {
+  console.log("P ready");
+});
 
  async function publish(topic, message) {
-    payloads = [
-        { topic: topic, messages: JSON.stringify(message)}
-    ];
-    //console.log("Data ready to send to ",topic," ",message);
-    
-        console.log("sending");
-        let push_status = producer.send(payloads, (err, data) => {
+    payloads = [{ topic: topic, messages: JSON.stringify(message)}];
+    console.log("sending");
+    let push_status = producer.send(payloads, (err, data) => {
           if (err) {
             console.log('[kafka-producer -> '+topic+']: broker update failed');
           } else {
             console.log('[kafka-producer -> '+topic+']: broker update success');
+
           }
-        });
-     
+    });
+
      
 }
 
 let i = 0;
 app.post('/send', (req, res) => {
-    console.log(req.body, i);
+    //console.log(req.body, i);
     i = i+1;
     publish('test',req.body);
-
+    consumer.on('message', function (message) {
+      console.log(message);
+      res.json(message);
+    });
 });
+
+
+
 const PORT = 8080;
 
 app.listen(PORT, console.log(`Server at port ${PORT}`));
