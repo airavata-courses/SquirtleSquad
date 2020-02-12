@@ -1,10 +1,9 @@
 const express = require('express');
-const sess = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Session = require('./models/sessionmodel');
 const SessionJobs = require('./models/sessionJobModel');
-
+const sess = express();
 sess.use(bodyParser.json());
 
 //DB config
@@ -50,9 +49,58 @@ consumer.on('message', function (message) {
     if (err) return console.error(err);
       console.log("Saved Data in sessJobs: ",data);
     });
+  });
+//Kafka pipelines
+
+
+const consumerApiGate = new Consumer(client,[{ topic: 'apigateway'}],{autoCommit: true}),
+consumerDataRet = new Consumer(client,[{ topic: 'dataretrieval'}],{autoCommit: true}),
+consumerModExec = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
+
+consumerApiGate.on('message', function (message) {
+  console.log(message);
+  const sess = new Session(JSON.parse(message.value));
+  sess.save(function (err, data) {
+    if (err){
+      return console.error(err);
+    } 
+    console.log("Saved Data: ",data);
+  });
 });
 
+consumerDataRet.on('message', function (message) {
+  console.log(message);
+  const sess = new Session(JSON.parse(message.value));
+  sess.save(function (err, data) {
+    if (err){
+      return console.error(err);
+    } 
+    console.log("Saved Data: ",data);
+  });
+});
 
+consumerModExec.on('message', function (message) {
+  console.log(message);
+  const sess = new Session(JSON.parse(message.value));
+  sess.save(function (err, data) {
+    if (err){
+      return console.error(err);
+    } 
+    console.log("Saved Data: ",data);
+  });
+});
+
+consumerApiGate.on('error', function(err) {
+  console.log('error', err);
+});
+
+consumerDataRet.on('error', function(err) {
+  console.log('error', err);
+});
+
+consumerModExec.on('error', function(err) {
+  console.log('error', err);
+});
 
 const PORT = 8082;
 sess.listen(PORT, console.log(`Server at port ${PORT}`));
