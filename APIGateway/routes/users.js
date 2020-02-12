@@ -37,7 +37,7 @@ router.get('/logout', (req, res) => {
             res.sendStatus(403);
         }
         console.log(authData._id);
-        const message = {sessID: authData._id, action: 'logout', timeStamp: Date.now()}
+        const message = {sessID: authData.sessID, userID: authData._id, action: {name:'logout'}, timeStamp: Date.now()}
         res.clearCookie('token');
         publish('addAction',message);
 
@@ -66,7 +66,7 @@ router.get('/dashboard', (req, res) => {
 
 //Post Methods
 //register handler
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const {name, email, password, password2} = req.body;
     let errors = [];
     //Check all fields filled
@@ -89,58 +89,24 @@ router.post('/register', (req, res) => {
         })
     }
     else{
-        //Validation pass
-        User.findOne({email:email})
-        .then(user => {
-            if(user) {
-                //User exist
-                console.log(req.body)
-                errors.push({msg : 'Email already registered'});
-                res.render('register', {
-                    errors,
-                    name,
-                    email,
-                    password,
-                    password2
-                });
-            }
-            else {
-                const newUser = new User({
-                    name,
-                    email,
-                    password
-                });
-                //Encrypting password
-                bcrypt.genSalt(10, (err, salt) => 
-                    bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        if(err) throw err;
-                        //Set password to ecrypted password
-                        newUser.password = hash;
-                        newUser.save()
-                        .then(user => {
-                            req.flash('success_msg', 'You are now registered.');
-                            res.redirect('/users/login');
-                        })
-                        .catch(err => console.log(err));
-                    })
-                );
-            }
-        });
+        const result = await axios.post(`http://localhost:8081/register?name=${name}&&email=${email}&&password=${password}`)
+        .catch((error)=>{ console.log(error);
+          });
+        if(result.data.status == 'Success')
+          res.redirect('/users/login');
+        else
+          res.send(result.data.msg);
     }
 });
 
 
 router.post('/login', async(req, res) =>{
-    const result = await axios.post(`http://localhost:8081/login?email=${req.body.email}&&password=${req.body.password}`,  {
-                    email: req.body.email,
-                    password: req.body.password
-                
-    }).catch((error)=>{
-        console.log(error);
-        });
+    const result = await axios.get(`http://localhost:8081/login?email=${req.body.email}&&password=${req.body.password}`)
+    .catch((error)=>{ console.log(error);
+    });
     console.log('result: ',result)
     if(result.data.status == 'Success'){
-        const token = jwt.sign({_id: result.data._id},'secretkey');
+        const token = jwt.sign({_id: result.data._id, sessID: result.data.sessID},'secretkey');
         res.cookie('token', token,  {expire: 360000 + Date.now()});
         console.log('Setting Cookie');
         res.redirect('/users/dashboard');
