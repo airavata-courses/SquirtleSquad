@@ -95,6 +95,18 @@ consumer.on('message', async function(message) {
 //consumerAction.on('error', function(err) {
  //   console.log('error', err);
 //});
+
+consumerPostAna.on('message', async function(message) {
+    console.log('here');
+    console.log(
+      'kafka-> ',
+      message.value
+    );
+  });
+  
+  consumerAction.on('error', function(err) {
+    console.log('error', err);
+  });
   
 //consumerPostAna.on('error', function(err) {
 //    console.log('error', err);

@@ -42,6 +42,31 @@ sess.get('/getSessionID', async(req, res)=>{
   })
 });
 
+sess.get('/getLastSession',async (req, res)=>{
+  session = Session.find({userID: req.query.userID}).sort({timeStamp: -1}).limit(2)
+            .then(session => {
+              console.log("2nd Last Session",session);
+              state = SessionJobs.find({sessID: session[1]._id}).sort({timeStamp: -1})
+              .then(async (jobs) => {
+                if(jobs == null){
+                  console.log("Nothig!!!!!");
+                  res.send("None");
+                }
+                else
+                {
+                  console.log(jobs, jobs.length);
+                  for(i = 0; i< jobs.length; i++){
+                      if(jobs[i].action.name == 'state'){
+                        console.log('Last State: ', jobs[i].action.value);
+                        res.send(jobs[i].action.value);
+                        break;
+                      }
+                  //
+                }}
+              });
+            });
+});
+
 consumer.on('message', function (message) {
   console.log(message);
   let sessjobs = new SessionJobs(JSON.parse(message.value));
