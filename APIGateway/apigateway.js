@@ -66,6 +66,7 @@ producer.on('error', function(err) {
 
 
 
+
 consumerPostAna.on('message', async function(message) {
     console.log('here');
     console.log(

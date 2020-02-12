@@ -36,25 +36,23 @@ router.get('/logout', (req, res) => {
             console.log(err);
             res.sendStatus(403);
         }
-        console.log(authData._id);
+        console.log("\logout route:", authData._id);
         const message = {sessID: authData.sessID, userID: authData._id, action: {name:'logout'}, timeStamp: Date.now()}
-        res.clearCookie('token');
         publish('addAction',message);
-
+        res.clearCookie('token');
         res.redirect('/users/login');
+        
     });
 });
     
 
 router.get('/dashboard', (req, res) => {
-    console.log(5);
     const token = req.cookies['token'];
     jwt.verify(token, 'secretkey', (err, authData) => {
         if(err){
             console.log(err);
-            res.sendStatus(403);
+            res.send("Can't Log in")
         } else{
-            console.log(8);
             res.render('dashboard');        
         }
     });
@@ -104,7 +102,7 @@ router.post('/login', async(req, res) =>{
     const result = await axios.get(`http://localhost:8081/login?email=${req.body.email}&&password=${req.body.password}`)
     .catch((error)=>{ console.log(error);
     });
-    console.log('result: ',result)
+    //console.log('result: ',result)
     if(result.data.status == 'Success'){
         const token = jwt.sign({_id: result.data._id, sessID: result.data.sessID},'secretkey');
         res.cookie('token', token,  {expire: 360000 + Date.now()});
@@ -116,7 +114,35 @@ router.post('/login', async(req, res) =>{
 });
 
 
+router.get('/getState', (req, res)=>{
+    console.log('Getting Latest Session');
+    const token = req.cookies['token'];
+    jwt.verify(token, 'secretkey', async (err, authData) => {
+        if(err){
+            console.log(err);
+            res.sendStatus(403);
+        }
+        console.log(authData._id);
+        const result = await axios.get(`http://localhost:8082/getLastSession?userID=${authData._id}`);
+        console.log(result.data);
+        res.send(result.data);
+    });
+});
 
+router.post('/setState', (req,res)=>{
+    console.log('Getting Latest Session');
+    const token = req.cookies['token'];
+    jwt.verify(token, 'secretkey', async (err, authData) => {
+        if(err){
+            console.log(err);
+            res.sendStatus(403);
+        }
+        console.log(authData._id);
+        console.log("Setting State");
+        const message = {sessID: authData.sessID, userID: authData._id, action: {name:'state', value: req.query.value}, timeStamp: Date.now()}
+        publish('addAction',message);
+    });
+});
 //Uploading files
 
 module.exports = router;
