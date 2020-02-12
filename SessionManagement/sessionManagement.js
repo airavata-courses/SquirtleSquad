@@ -1,10 +1,9 @@
 const express = require('express');
-const sess = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Session = require('./models/sessionmodel');
 const kafka = require('kafka-node');
-
+const sess = express();
 sess.use(bodyParser.json());
 
 //DB config
@@ -20,46 +19,54 @@ Producer = kafka.Producer;
 Consumer = kafka.Consumer;
 client = new kafka.KafkaClient();
 producer = new Producer(client);
-consumerAction = new Consumer(client,[{ topic: 'addAction'}],{autoCommit: true});
-consumerPostAna = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
+consumerApiGate = new Consumer(client,[{ topic: 'apigateway'}],{autoCommit: true});
+consumerDataRet = new Consumer(client,[{ topic: 'dataretrieval'}],{autoCommit: true});
+consumerModExec = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
-consumerAction.on('message', function (message) {
+consumerApiGate.on('message', function (message) {
   console.log(message);
-  let sess = new Session(JSON.parse(message.value));
+  const sess = new Session(JSON.parse(message.value));
   sess.save(function (err, data) {
-    if (err) return console.error(err);
+    if (err){
+      return console.error(err);
+    } 
     console.log("Saved Data: ",data);
-    payloads = [{ topic: 'test_result', messages: "Success"}];
-    console.log("sending");
-    let push_status = producer.send(payloads, (err, data) => {  
-        if (err) {
-            console.log('[kafka-producer -> test_result]: broker update failed');
-        } else {
-            console.log('[kafka-producer -> test_result]: broker update success!');
-        }
-    });
   });
 });
 
-consumerPostAna.on('message', async function(message) {
-  console.log('here');
-  console.log(
-    'kafka-> ',
-    message.value
-  );
+consumerDataRet.on('message', function (message) {
+  console.log(message);
+  const sess = new Session(JSON.parse(message.value));
+  sess.save(function (err, data) {
+    if (err){
+      return console.error(err);
+    } 
+    console.log("Saved Data: ",data);
+  });
 });
 
-consumerAction.on('error', function(err) {
+consumerModExec.on('message', function (message) {
+  console.log(message);
+  const sess = new Session(JSON.parse(message.value));
+  sess.save(function (err, data) {
+    if (err){
+      return console.error(err);
+    } 
+    console.log("Saved Data: ",data);
+  });
+});
+
+consumerApiGate.on('error', function(err) {
   console.log('error', err);
 });
 
-consumerPostAna.on('error', function(err) {
+consumerDataRet.on('error', function(err) {
   console.log('error', err);
 });
 
-
-
-
+consumerModExec.on('error', function(err) {
+  console.log('error', err);
+});
 
 const PORT = 8082;
 sess.listen(PORT, console.log(`Server at port ${PORT}`));
