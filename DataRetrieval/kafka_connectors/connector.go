@@ -54,22 +54,6 @@ func IsValidUrl(str string) bool {
    return err == nil && u.Scheme != "" && u.Host != ""
 }
 
-func DownloadFile(filepath string, url string) error {
-
-    resp, err := http.Get(url)
-    if err != nil {
-        return err
-    }
-    defer resp.Body.Close()
-    out, err := os.Create(filepath)
-    if err != nil {
-        return err
-    }
-    defer out.Close()
-    _, err = io.Copy(out, resp.Body)
-    return err
-}
-
 
 
 
@@ -120,7 +104,6 @@ func main() {
 	}
 
   topic := "apigateway"
-	fmt.Println("Entering COnsume")
 	consumer, err := masterConsumer.ConsumePartition(topic, 0, sarama.OffsetOldest)
 	if err != nil {
 		panic(err)
@@ -128,12 +111,8 @@ func main() {
 
   // producer func() activated here
 
-
-
-  fmt.Println("Entering COnsume")
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt)
-	fmt.Println("3sCOnsumasde")
 	count := 0
 	finished := make(chan struct{}) // channel  created
 	go func() {
@@ -154,7 +133,6 @@ func main() {
         if err != nil {
            panic(err)
          }
-        fmt.Println("inside panic 1")
 
         if err := Download("Level2_KATX_20130717_1950.ar2v", fileUrl); err != nil {
             panic(err)
@@ -172,3 +150,4 @@ func main() {
   fmt.Println("Processed", count, "messages")
 
 }
+
