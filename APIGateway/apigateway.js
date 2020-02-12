@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const app = express();
 const kafka = require('kafka-node');
+const utf8  = require('utf8');
 
 //Cookies
 app.use(cookieParser());
@@ -20,13 +21,27 @@ app.use(bodyParser.json());
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 
+//Setting static folder
+app.use(express.static('../Data/'));
+
 //Kafka pipelines
 Producer = kafka.Producer;
 Consumer = kafka.Consumer;
 client = new kafka.KafkaClient();
 producer = new Producer(client);
-consumerAction = new Consumer(client,[{ topic: 'addAction'}],{autoCommit: true});
-consumerPostAna = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
+consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
+
+consumer.connect();
+
+consumer.on('ready', function() {
+    console.log('connected');
+    consumer.subscribe(['postanalysis']);
+    consumer.consume();
+}).on('data', function(data) {
+    // Output the actual message contents
+    console.log("Message consumed:",data.value.toString());
+    const decodedFile = utf8.decode(data.value);
+});
 
 
 producer.on('ready', async function() {
@@ -66,6 +81,21 @@ producer.on('error', function(err) {
 
 
 
+/*
+consumer.on('message', async function(message) {
+    const decodedFile = utf8.decode(message.value);
+    app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
+        img = new Buffer('../Data/'+decodedFile, "binary").toString("base64");
+        res.render({img: img});
+    }); 
+});
+*/
+
+    
+//consumerAction.on('error', function(err) {
+ //   console.log('error', err);
+//});
+
 consumerPostAna.on('message', async function(message) {
     console.log('here');
     console.log(
@@ -78,9 +108,12 @@ consumerPostAna.on('message', async function(message) {
     console.log('error', err);
   });
   
-  consumerPostAna.on('error', function(err) {
-    console.log('error', err);
-  });
+//consumerPostAna.on('error', function(err) {
+//    console.log('error', err);
+//});
+
+
+
 
 const PORT = process.env.PORT || 8080;
 

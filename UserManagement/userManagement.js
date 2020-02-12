@@ -45,7 +45,7 @@ user.post('/register', (req, res) => {
             result = {status:'Failure' , msg : 'Email already registered'};
             res.json(result);
         }
-        else {
+        else { 
             const newUser = new User({
                 name,
                 email,
@@ -76,7 +76,7 @@ user.get('/login', async(req, res) =>{
     const userx = await User.findOne({
         email: req.query.email
     });
-    console.log(userx);
+    //console.log(userx);
     if (!userx){
         const reqMsg = {_id: undefined, status: 'Failure'};
         res.json(reqMsg);
@@ -96,10 +96,10 @@ user.get('/login', async(req, res) =>{
             const result2 = await axios.get(`http://localhost:8082/getSessionID?userID=${userx._id}&&timeStamp=${Date.now()}`)
             .catch((error)=>{ console.log(error);
             });
-            console.log(result2);
+            //console.log(result2);
             const sessID = result2.data._id;
             const reqMsg = {_id: userx._id, sessID: sessID, status: 'Success'};
-            console.log(reqMsg);
+            //console.log(reqMsg);
             res.json(reqMsg);    
         }
     });
