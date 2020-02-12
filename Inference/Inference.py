@@ -11,7 +11,8 @@ class Inference:
         self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
                                        
     def publish_message(self,message, topic, key=None):
-        key = bytes(key, encoding = 'utf-8')
+        if key:
+            key = bytes(key, encoding = 'utf-8')
         val = bytes(message, encoding= 'utf-8')
         self.producer.send(topic, key = key, value = val)
         self.producer.flush()
@@ -29,9 +30,12 @@ class Inference:
         print("Consumer running..")
         for mssg in consumer:
             filename = mssg
-            self.postAnalysis(filename.value.decode('utf-8'))
-            self.publish_message(message = filename, topic = 'postanalysis')
-        return command
+            decodedFile = mssg.value.decode('utf-8')
+            print("Recieved filename:", decodedFile)
+            self.postAnalysis(decodedFile)
+            self.publish_message(message = decodedFile, topic = 'postanalysis')
+            print("Filename published from inference..")
+        
 
     
 
