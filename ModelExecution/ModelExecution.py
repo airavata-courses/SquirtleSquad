@@ -35,11 +35,14 @@ class Execution:
         for mssg in consumer:
             filename = mssg
             decodedFile = filename.value.decode('utf-8')
+            print("Recieved filename:", decodedFile)
+            imageFilename=""
             if decodedFile == "KATX20130717_195021_V06":
                 imageFilename = self.Model1(filename.value.decode('utf-8'))
-            if decodedFIle == "Level2_KATX_20130717_1950.ar2v":
+            if decodedFile == "Level2_KATX_20130717_1950.ar2v":
                 imageFilename = self.Model2(filename.value.decode('utf-8'))
             self.publish_message(message = imageFilename, topic = 'modelexecution')
+            print("File has published from ModelExecution..")
         return filename
 
     def Model1(self, filename):
@@ -76,7 +79,7 @@ class Execution:
                     axislabels=('East West distance from radar (km)', ''))
         display.set_limits((-300, 300), (-300, 300), ax=ax)
         plt.savefig(path + filename+'_multiplot.png')
-        return filename+'_plot.png'
+        return filename+'_multiplot.png'
 
     def Model2(self, filename):
         #Check to make sure this model gets the right file.
