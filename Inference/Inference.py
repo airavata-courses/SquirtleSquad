@@ -35,7 +35,7 @@ class Inference:
             self.postAnalysis(decodedFile)
             self.publish_message(message = decodedFile, topic = 'postanalysis')
             print("Filename published from inference..")
-        return command
+        
 
     
 
