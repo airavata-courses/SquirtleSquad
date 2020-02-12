@@ -79,7 +79,7 @@ consumer.on('message', function (message) {
 
 
 const consumerApiGate = new Consumer(client,[{ topic: 'apigateway'}],{autoCommit: true}),
-consumerDataRet = new Consumer(client,[{ topic: 'dataretrieval'}],{autoCommit: true}),
+consumerDataRet = new Consumer(client,[{ topic: 'DataRetrieval'}],{autoCommit: true}),
 consumerModExec = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
 consumerApiGate.on('message', function (message) {
