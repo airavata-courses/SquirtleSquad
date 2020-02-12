@@ -4,6 +4,9 @@ import (
   "fmt"
   "os"
   "os/signal"
+  "net/http"
+  "io"
+  "net/url"
 
   "github.com/Shopify/sarama"
 	)
@@ -30,6 +33,45 @@ func prepareMessage(topic, message string) *sarama.ProducerMessage {
 	return msg
 }
 
+func Download(filepath string, url string) error {
+
+    resp, err := http.Get(url)
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+    out, err := os.Create(filepath)
+    if err != nil {
+        return err
+    }
+    defer out.Close()
+    _, err = io.Copy(out, resp.Body)
+    return err
+}
+
+func IsValidUrl(str string) bool {
+   u, err := url.Parse(str)
+   return err == nil && u.Scheme != "" && u.Host != ""
+}
+
+func DownloadFile(filepath string, url string) error {
+
+    resp, err := http.Get(url)
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+    out, err := os.Create(filepath)
+    if err != nil {
+        return err
+    }
+    defer out.Close()
+    _, err = io.Copy(out, resp.Body)
+    return err
+}
+
+
+
 
 func main() {
 
@@ -44,6 +86,7 @@ func main() {
   config.Consumer.Return.Errors = true
 
   // consumer inititalisation block
+  fileUrl := "https://engineering.arm.gov/~jhelmus/pyart_example_data/Level2_KATX_20130717_1950.ar2v"
 
   masterConsumer, errConsumer := sarama.NewConsumer(brokers, config) //the NewConsumer allows for the brokers to be addedwhennew topics are created
 	if errConsumer != nil {
@@ -99,9 +142,8 @@ func main() {
 			case err := <-consumer.Errors():
 				fmt.Println(err)
 			case msg := <-consumer.Messages():
-				fmt.Println("made")
+				fmt.Println("Consumer Initialised")
 				count++
-
 				fmt.Println("The messages : ", string(msg.Key), string(msg.Value))
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
@@ -109,10 +151,16 @@ func main() {
                    }
         partition, offset, err := masterProducer.SendMessage(link)
         fmt.Println("Producer produced")
-      	if err != nil {
-      		panic(err)
-      	}
+        if err != nil {
+           panic(err)
+         }
+        fmt.Println("inside panic 1")
+
+        if err := Download("Level2_KATX_20130717_1950.ar2v", fileUrl); err != nil {
+            panic(err)
+        }
         fmt.Println("The link (%s) has been sent with partition(%d)/offset(%d)",link.Value,partition,offset)
+
 			case <-signals:
 				fmt.Println("Interrupt is detected")
 				finished <- struct{}{}
