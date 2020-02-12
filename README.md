@@ -9,6 +9,8 @@ For internal messaging between the microservices we have used Kafka. The fronten
 - Session Management listens to each microservice and uses this to keep a track of all the services ran by the user.
 - We have deployed some predifined models for Model Execution. The below figure can give a better idea of the architecture involved.
 
+![Our Architecture](BlockDiagram.png)
+
 ## Installation
 1. Run bash script....
 2. Run application script...
