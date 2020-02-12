@@ -33,14 +33,14 @@ consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
 consumer.connect();
 
-consumer.on('ready', function() {
-    console.log('connected');
-    consumer.subscribe(['postanalysis']);
-    consumer.consume();
-}).on('data', function(data) {
-    // Output the actual message contents
-    console.log("Message consumed:",data.value.toString());
-    const decodedFile = utf8.decode(data.value);
+consumer.on('message', function(message) {
+    console.log('connected', message);
+    console.log("Message consumed:",message.value.toString());
+    const decodedFile = utf8.decode(message.value);
+    app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
+        img = new Buffer('../Data/'+decodedFile, "binary").toString("base64");
+        res.render({img: img});
+    }); 
 });
 
 
@@ -96,17 +96,17 @@ consumer.on('message', async function(message) {
  //   console.log('error', err);
 //});
 
-consumerPostAna.on('message', async function(message) {
-    console.log('here');
-    console.log(
-      'kafka-> ',
-      message.value
-    );
-  });
+// consumerPostAna.on('message', async function(message) {
+//     console.log('here');
+//     console.log(
+//       'kafka-> ',
+//       message.value
+//     );
+//   });
   
-  consumerAction.on('error', function(err) {
-    console.log('error', err);
-  });
+//   consumerAction.on('error', function(err) {
+//     console.log('error', err);
+//   });
   
 //consumerPostAna.on('error', function(err) {
 //    console.log('error', err);
