@@ -30,6 +30,7 @@ class Inference:
         for mssg in consumer:
             filename = mssg
             self.postAnalysis(filename.value.decode('utf-8'))
+            self.publish_message(message = filename, topic = 'postanalysis')
         return command
 
     
