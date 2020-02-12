@@ -4,11 +4,8 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const app = express();
 
-
-
+//Cookies
 app.use(cookieParser());
-app.use(bodyParser.json());
-
 
 //EJS
 app.use(expressLayouts);
@@ -16,6 +13,7 @@ app.set('view engine', 'ejs');
 
 //BodyParser
 app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 //Routes
 app.use('/', require('./routes/index'));
