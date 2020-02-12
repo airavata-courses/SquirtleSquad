@@ -10,30 +10,32 @@ app = Flask(__name__)
 class Execution:
     def __init__(self):
         '''change this later'''
-        self.topic = 'topic1' 
+        self.topic = 'DataRetrieval' 
         self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
                                     
-    def publish_message(key=None, message):
-        key = bytes(key, encoding = 'utf-8')
+    def publish_message(self, message, topic, key=None):
+        if key:
+            key = bytes(key, encoding = 'utf-8')
         val = bytes(message, encoding= 'utf-8')
-        self.producer.send(self.topic, key = key, value = val)
+        self.producer.send(topic, key = key, value = val)
         self.producer.flush()
 
-    def getFilename():
+    def getFilename(self):
         consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers = 'localhost:9092', 
-                                 auto_offset_reset = 'earliest')
+                                 auto_offset_reset = 'earliest',
+                                 group_id=None)
         for mssg in consumer:
             filename = mssg
-        consumer.close()
-        sleep(5)
+        #consumer.close()
+        #sleep(5)
         return filename
 
-    def Model(filename):
+    def Model(self, filename):
         assert filename == "KATX20130717_195021_V06", "Incorrect filename"
         #Add AWS path below
-        path = ""+filename
-        radar = pyart.io.read_nexrad_archive(path)
+        path = "../Data/"
+        radar = pyart.io.read_nexrad_archive(path + filename)
 
         display = pyart.graph.RadarDisplay(radar)
         fig = plt.figure(figsize=(10, 10))
@@ -60,14 +62,20 @@ class Execution:
                     title='Correlation Coefficient', colorbar_label='',
                     axislabels=('East West distance from radar (km)', ''))
         display.set_limits((-300, 300), (-300, 300), ax=ax)
-        plt.savefig(filename+'.png') 
+        plt.savefig(path + filename+'_plot.png')
+        return filename+'_plot.png'
 
 
 
 
-if __name__ == __main__:
+if __name__ == '__main__':
     exe = Execution()
-    filename = exe.getFilename()
-    exe.Model(filename)
-    if sys.argv[2]:
-        exe.publish_message("Model_executed");    
+    #filename = exe.getFilename()
+    filename = "KATX20130717_195021_V06"
+    mssg = exe.Model(filename)
+    exe.publish_message(message = mssg, topic = "modelexecution");  
+    print("Mssg sent to post Analysis..")
+    #exe.publish_message(messsage = "Model could not execute, file-error", topic = "ModelExecution");
+    #print("Model failed to execute")
+    
+          

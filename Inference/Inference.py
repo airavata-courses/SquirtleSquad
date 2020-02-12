@@ -1,34 +1,42 @@
 from matplotlib import image 
-import pyart
+import matplotlib.pyplot as plt
+#import pyart
 import sys
 from kafka import KafkaProducer, KafkaConsumer
 
 class Inference:
     def __init__(self):
-        self.topic = 'topic2' '''change this later'''
+        #Change the below topic accordingly...
+        self.topic = 'modelexecution' 
         self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
                                        
-    def publish_message(key=None, message):
+    def publish_message(self,message, topic, key=None):
         key = bytes(key, encoding = 'utf-8')
         val = bytes(message, encoding= 'utf-8')
-        self.producer.send(self.topic, key = key, value = val)
+        self.producer.send(topic, key = key, value = val)
         self.producer.flush()
 
-    def getFlag():
-        self.consumer = KafkaConsumer('topic1',
-                                  bootstrap_servers = 'localhost:9092', 
-                                  auto_offset_reset = 'earliest')
+    def postAnalysis(self, filename):
+        path = '../Data/'
+        img = image.imread(path + filename)
+        plt.imshow(img)
+        print("Image recieved and posted...")
 
-        for flag in self.consumer:
-            command = mssg
-        consumer.close()
-        sleep(5)
+    def getFilename(self):
+        consumer = KafkaConsumer(self.topic,
+                                 bootstrap_servers = 'localhost:9092', 
+                                 group_id=None)
+        print("Consumer running..")
+        for mssg in consumer:
+            filename = mssg
+            self.postAnalysis(filename.value.decode('utf-8'))
         return command
+
+    
 
 if __name__ == '__main__':
     inf = Inference()
-    if(inf.getFlag()):
-        data = image.imread('Data/test_fig.png')
-        inf.publish_message(data)
+    print("Consumer started..")
+    inf.getFilename()
 
     
