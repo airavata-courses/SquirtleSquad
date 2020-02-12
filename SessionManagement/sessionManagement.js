@@ -1,49 +1,48 @@
 const express = require('express');
-//const expressLayouts = require('express-ejs-layouts');
-//const mongoose = require('mongoose');
-const kafka = require('kafka-node');
+const sess = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const Session = require('./models/sessionmodel');
 
-const app = express();
-const router = express.Router();
-const topic = 'apigateway';
-const client = new kafka.KafkaClient();
-const Producer = kafka.HighLevelProducer;
-const producer = new Producer(client);
+sess.use(bodyParser.json());
 
-Consumer = kafka.Consumer,
-consumer = new Consumer(client,[{ topic: 'sessionManagement'}],{autoCommit: true});
-/*
-producer.on('ready', function(){
-    //Create a message
-    var msg = "Hi! This is Session";
-    var payLoad = [{
-        topic: topic,
-        message: msg,
-    }];  
-});
+//DB config
+const db = require('../config/keys').MongoURI;
 
-producer.on('error', function(err){
-    console.log(err);
-});
-*/
-consumer.on('message', function (message){
-    var msg = message.value;
-    console.log(msg);
-});
+//Connect to Mongo
+mongoose.connect(db, { useNewUrlParser: true })
+    .then(() => console.log('Session MongoDB Connected...'))
+    .catch(err => console.log(err));
 
-consumer.on('error', function(err){
-    console.log(err)
-});
+const kafka = require('kafka-node'),
+    Producer = kafka.Producer,
+    Consumer = kafka.Consumer,
+    client = new kafka.KafkaClient(),
+    producer = new Producer(client),
+    consumer = new Consumer(client,[{ topic: 'addAction'}],{autoCommit: true});
 
-process.on('SIGINT', function() {
-    consumer.close(true, function() {
-      process.exit();
-    });
+
+
+    consumer.on('message', function (message) {
+      console.log(message);
+      let sess = new Session(JSON.parse(message.value));
+      sess.save(function (err, data) {
+        if (err) return console.error(err);
+        console.log("Saved Data: ",data);
+        payloads = [{ topic: 'test_result', messages: "Success"}];
+        console.log("sending");
+        let push_status = producer.send(payloads, (err, data) => {  
+              if (err) {
+                console.log('[kafka-producer -> test_result]: broker update failed');
+              } else {
+                console.log('[kafka-producer -> test_result]: broker update success!');
+              }
+        });
+      });
+
   });
 
-//BodyParser
-app.use(express.urlencoded({extended: false}));
 
-const PORT = process.env.PORT || 8081;
 
-app.listen(PORT, console.log(`Server at port ${PORT}`));
+const PORT = 8082;
+sess.listen(PORT, console.log(`Server at port ${PORT}`));

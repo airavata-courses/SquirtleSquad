@@ -1,48 +1,27 @@
 const express = require('express');
-//const expressLayouts = require('express-ejs-layouts');
-//const mongoose = require('mongoose');
-const kafka = require('kafka-node');
-
+const expressLayouts = require('express-ejs-layouts');
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser');
 const app = express();
-const router = express.Router();
-const topic = 'apigateway';
-const client = new kafka.KafkaClient();
-const Producer = kafka.HighLevelProducer;
-const producer = new Producer(client);
 
-Consumer = kafka.Consumer,
-consumer = new Consumer(client,[{ topic: 'sessionManagement'}],{autoCommit: true});
 
-producer.on('ready', function(){
-    //Create a message
-    var msg = "Hi! This is APIgateway";
-    var payLoad = [{
-        topic: topic,
-        message: msg,
-    }];  
-});
 
-producer.on('error', function(err){
-    console.log(err);
-});
-/*
-consumer.on('message', function (message){
-    var msg = message.value;
-    console.log(msg);
-});
+app.use(cookieParser());
+app.use(bodyParser.json());
 
-consumer.on('error', function(err){
-    console.log(err)
-});
 
-process.on('SIGINT', function() {
-    consumer.close(true, function() {
-      process.exit();
-    });
-  });
-*/
+//EJS
+app.use(expressLayouts);
+app.set('view engine', 'ejs');
+
 //BodyParser
 app.use(express.urlencoded({extended: false}));
+
+//Routes
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
+
+
 
 const PORT = process.env.PORT || 8080;
 
