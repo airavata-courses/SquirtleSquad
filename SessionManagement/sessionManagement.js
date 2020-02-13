@@ -54,7 +54,8 @@ sess.get('/getLastSession',async (req, res)=>{
                 }
                 else
                 {
-                  console.log(jobs, jobs.length);
+                  console.log("jobs, jobs.length");
+                  console.log("Restoring Jobs");
                   for(i = 0; i< jobs.length; i++){
                       if(jobs[i].action.name == 'state'){
                         console.log('Last State: ', jobs[i].action.value);
