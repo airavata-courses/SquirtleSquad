@@ -36,12 +36,11 @@ For internal messaging between the microservices we have used Kafka. The fronten
 To run this application, make sure you have anaconda package for python, go and node.js installed.
 - For installing nodejs follow instructions at https://nodejs.org/en/download/.
 - Download and install anaconda v(3.7) from https://docs.anaconda.com/anaconda/install/.
-- To install go, open up a terminal and type ```$ sudo apt-get go-golang```.
+- To install go, open up a terminal and type ```$ sudo apt-get install golang```.
 - This application uses Kafka as the main messaging service between services. To install kafka, follow https://kafka.apache.org/quickstart.
 
 ### Packages
 - To run this application, install py-ART package for nexrad dataset. This can be installed using the command ```$ conda install -c conda-forge arm_pyart ```. Make sure you have anaconda installed before running this. If you have a ```conda command not found``` error, make sure you have added the path to your anaconda3 directory in your ~/.bashrc file.
-- 
 
 ## Installation
 Follow the below instructions. Move to clone directory.
