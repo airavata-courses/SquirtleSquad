@@ -37,7 +37,6 @@ To run this application, make sure you have anaconda package for python, go and 
 
 ### Packages
 - To run this application, install py-ART package for nexrad dataset. This can be installed using the command ```$ conda install -c conda-forge arm_pyart ```. Make sure you have anaconda installed before running this. If you have a ```conda command not found``` error, make sure you have added the path to your anaconda3 directory in your ~/.bashrc file.
-- 
 
 ## Installation
 Follow the below instructions. Move to clone directory.
