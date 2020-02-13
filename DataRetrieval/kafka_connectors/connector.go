@@ -123,7 +123,7 @@ func main() {
 			case msg := <-consumer.Messages():
 				fmt.Println("Consumer Initialised")
 				count++
-				fmt.Println("The messages : ", string(msg.Key), string(msg.Value))
+				fmt.Println("The messages : %v", string(msg.Value))
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
                          Value: sarama.StringEncoder(msg.Value),

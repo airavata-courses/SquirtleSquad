@@ -35,18 +35,6 @@ consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
 consumer.connect();
 
-async function publish(topic, message) {
-    payloads = [{ topic: topic, messages: JSON.stringify(message)}];
-    console.log("sending");
-    let push_status = producer.send(payloads, (err, data) => {
-        if (err) {
-            console.log('[kafka-producer -> '+topic+']: broker update failed');
-        } else {
-            console.log('[kafka-producer -> '+topic+']: broker update success');    
-        }
-    });
-}
-
 consumer.on('message', function(message) {
     console.log('connected', message);
     console.log("Message consumed:",message.value.toString());

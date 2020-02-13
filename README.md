@@ -26,7 +26,11 @@ For internal messaging between the microservices we have used Kafka. The fronten
 - The user requests for a model to execute. This requests goes to the API Gateway. 
 - The API Gateway sends this request as a message to the Data Retrieval API. The Data Retrieval API pulls the data the from a known link and stores it in "/Data" on the local machine. The Data Retrieval(DR) API then sends the name of the downloaded file through Kakfa to the Model Execution API.
 - The Model Execution(ME) API recieves the message and calls a function to execute the model. The generated data is again stored in "/Data" and the name of the generated file is sent to the Post Analysis(PA) API using Kafka.
-- The PA API then creates a .png plot file and sends this to the API Gateway through Kafka.  
+- The PA API then creates a .png plot file and sends this to the API Gateway through Kafka. 
+- The final data should be stored in the folder ```\Data```. 
+
+### Bugs
+- We are unable to display results on frontend.
 
 ## Requirements
 To run this application, make sure you have anaconda package for python, go and node.js installed.
