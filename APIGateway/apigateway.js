@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const kafka = require('kafka-node');
 const utf8  = require('utf8');
+const path = require('path');
 
 //Cookies
 app.use(cookieParser());
@@ -33,16 +34,36 @@ consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
 consumer.connect();
 
+async function publish(topic, message) {
+    payloads = [{ topic: topic, messages: JSON.stringify(message)}];
+    console.log("sending");
+    let push_status = producer.send(payloads, (err, data) => {
+        if (err) {
+            console.log('[kafka-producer -> '+topic+']: broker update failed');
+        } else {
+            console.log('[kafka-producer -> '+topic+']: broker update success');    
+        }
+    });
+}
+
 consumer.on('message', function(message) {
     console.log('connected', message);
     console.log("Message consumed:",message.value.toString());
     const decodedFile = utf8.decode(message.value);
-    app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
-        img = new Buffer('../Data/'+decodedFile, "binary").toString("base64");
-        res.render({img: img});
-    }); 
+    // app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
+    //     img = new Buffer('../Data/'+decodedFile, "binary").toString("base64");
+    //     res.render({img: img});
+    // }); 
 });
 
+app.get('/getPlot',(req, res)=>{
+
+})
+
+app.get('/getModel', (req, res)=>{
+    console.log('Sending Model');
+    publish('apigateway', req.query.value);
+})
 
 producer.on('ready', async function() {
     const payloads = [{

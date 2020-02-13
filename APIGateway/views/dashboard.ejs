@@ -12,7 +12,7 @@
   <div class="container">
     <h1>Choose a File</h1>
     <%= typeof msg != 'undefined' ? msg : '' %>
-    <form action="/users/upload" method="POST" enctype="multipart/form-data">
+    <form >
       <div class="file-field input-field"></div>
         <label for="models" style="display: block">Choose a model:</label><br>
       </div>
@@ -21,9 +21,9 @@
         <option value="Level2_KATX_20130717_1950.ar2v" >Level2_KATX_20130717_1950.ar2v</option>
         <option value="KATX20130717_195021_V06" >KATX20130717_195021_V06</option>
       </select><br><br>
-      <button type="submit" class="btn">Submit</button><br><br>
+      <button onclick="getModel();" class="btn">Submit</button><br><br>
     </form>
-
+    <button onclick="getPlot()" class="btn">Generate Plot</button><br><br>
     
     <form action="/users/logout" method="GET">
         <button onclick="logout();" class="btn">Logout</button>
@@ -74,6 +74,30 @@ function logout(){
   // //alert(document.getElementById("chooseFileBox").value);
   // xhttp.open("GET", "http://localhost:8080/users/logout?value="+document.getElementById("chooseFileBox").value, true);
   // xhttp.send();
+}
+
+function getPlot(){
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      
+    }
+  };
+  //alert(document.getElementById("chooseFileBox").value);
+  xhttp.open("GET", "http://localhost:8080/getplot?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.send();
+}
+
+function getModel(){
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      
+    }
+  };
+  //alert(document.getElementById("chooseFileBox").value);
+  xhttp.open("GET", "http://localhost:8080/getModel?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.send();
 }
 
 window.onload = function(){
