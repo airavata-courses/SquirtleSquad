@@ -32,9 +32,10 @@ class Inference:
             filename = mssg
             decodedFile = mssg.value.decode('utf-8')
             print("Recieved filename:", decodedFile)
-            self.postAnalysis(decodedFile)
-            self.publish_message(message = decodedFile, topic = 'postanalysis')
-            print("Filename published from inference..")
+            if len(decodedFile)>0:
+                self.postAnalysis(decodedFile)
+                self.publish_message(message = decodedFile, topic = 'postanalysis')
+                print("Filename published from inference..")
         
 
     
