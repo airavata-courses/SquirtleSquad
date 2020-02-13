@@ -61,6 +61,7 @@ Follow the below instructions. Move to clone directory.
 
 5. Run the Data Retrieval service in a seperate terminal.
 - ```$ cd ../DataRetrieval ```
+- ```$ go get github.com/Shopify/sarama```
 - ```$ go build kafka-connectors/connector.go```
 - ```$ go run kafka-connectors/connector.go```
 
