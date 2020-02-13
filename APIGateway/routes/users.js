@@ -16,7 +16,7 @@ const Producer = kafka.Producer,
             if (err) {
                 console.log('[kafka-producer -> '+topic+']: broker update failed');
             } else {
-                console.log('[kafka-producer -> '+topic+']: broker update success');    
+                console.log('[Message:'+payloads[0].messages+' passed to '+topic+']: broker update success');    
             }
         });
     }
@@ -59,7 +59,21 @@ router.get('/dashboard', (req, res) => {
     
 });
 
-
+router.get('/getModel', async(req, res)=>{
+    const token = req.cookies['token'];
+    jwt.verify(token, 'secretkey', (err, authData) => {
+        if(err){
+            console.log(err);
+            res.sendStatus(403);
+        }
+        console.log("Sending ID:", authData._id);
+        const message = {sessID: authData.sessID, userID: authData._id, action: {name:'ModelExecution', value: req.query.value}, timeStamp: Date.now()}
+        console.log('Sending Model');
+        publish('apigateway',message);
+        
+    });
+    console.log('Sending Model');
+})
 
 
 //Post Methods

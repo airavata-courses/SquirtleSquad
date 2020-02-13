@@ -6,6 +6,7 @@ const app = express();
 const kafka = require('kafka-node');
 const utf8  = require('utf8');
 const path = require('path');
+const fs = require('fs');
 
 //Cookies
 app.use(cookieParser());
@@ -51,19 +52,29 @@ consumer.on('message', function(message) {
     console.log("Message consumed:",message.value.toString());
     const decodedFile = utf8.decode(message.value);
     // app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
-    //     img = new Buffer('../Data/'+decodedFile, "binary").toString("base64");
-    //     res.render({img: img});
+
     // }); 
 });
 
 app.get('/getPlot',(req, res)=>{
-
+    let fname = req.query.value;
+    
+    //console.log("Dir:",__dirname);
+    let img = '../Data/'+fname+'_multiplot.png';
+    console.log("File Name:",img);
+    let fdir = path.join(__dirname, '../Data/'+fname+'_multiplot.png');
+    console.log("Dir:",fdir);
+    if(fname === "KATX20130717_195021_V06") {
+        //img = new Buffer(fdir, "binary").toString("base64");
+        img = Buffer.from(fdir,'base64')
+    }
+    if(fname === "Level2_KATX_20130717_1950.ar2v") {
+        img = new Buffer(fdir, "binary").toString("base64");
+    }
+    console.log(img);
+    res.sendFile(fdir);
 })
 
-app.get('/getModel', (req, res)=>{
-    console.log('Sending Model');
-    publish('apigateway', req.query.value);
-})
 
 producer.on('ready', async function() {
     const payloads = [{
