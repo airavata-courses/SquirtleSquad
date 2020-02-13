@@ -37,12 +37,13 @@ class Execution:
             decodedFile = filename.value.decode('utf-8')
             print("Recieved filename:", decodedFile)
             imageFilename=""
-            if decodedFile == "KATX20130717_195021_V06":
-                imageFilename = self.Model1(filename.value.decode('utf-8'))
-            if decodedFile == "Level2_KATX_20130717_1950.ar2v":
-                imageFilename = self.Model2(filename.value.decode('utf-8'))
-            self.publish_message(message = imageFilename, topic = 'modelexecution')
-            print("File has published from ModelExecution..")
+            if len(decodedFile) > 0:
+                if decodedFile == "KATX20130717_195021_V06":
+                    imageFilename = self.Model1(filename.value.decode('utf-8'))
+                if decodedFile == "Level2_KATX_20130717_1950.ar2v":
+                    imageFilename = self.Model2(filename.value.decode('utf-8'))
+                self.publish_message(message = imageFilename, topic = 'modelexecution')
+                print("File has published from ModelExecution..")
         return filename
 
     def Model1(self, filename):

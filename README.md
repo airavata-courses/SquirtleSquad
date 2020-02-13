@@ -28,10 +28,44 @@ For internal messaging between the microservices we have used Kafka. The fronten
 - The Model Execution(ME) API recieves the message and calls a function to execute the model. The generated data is again stored in "/Data" and the name of the generated file is sent to the Post Analysis(PA) API using Kafka.
 - The PA API then creates a .png plot file and sends this to the API Gateway through Kafka.  
 
+## Requirements
+To run this application, make sure you have anaconda package for python, go and node.js installed.
+- For installing nodejs follow instructions at https://nodejs.org/en/download/.
+- Download and install anaconda v(3.7) from https://docs.anaconda.com/anaconda/install/
+- To install go, open up a terminal and type ```$ sudo apt-get go-golang``` 
+
+### Packages
+- To run this application, install py-ART package for nexrad dataset. This can be installed using the command ```$ conda install -c conda-forge arm_pyart ```. Make sure you have anaconda installed before running this. If you have a ```conda command not found``` error, make sure you have added the path to your anaconda3 directory in your ~/.bashrc file.
+- 
+
 ## Installation
-1. Run bash script....
-2. Run application script...
-3. Blaaaaa....
+Follow the below instructions. Move to clone directory.
+1. Run the API Gateway service
+-  ```$ cd SquirtleSquad/APIGateway ```
+- ```$ npm run dev```
+
+2. Run the User Management service in a seperate terminal.
+-  ```$ cd ../UserManagement ```
+- ```$ npm run dev```
+
+3. Run the Session Management service in a seperate terminal.
+-  ```$ cd ../SessionManagement ```
+- ```$ npm run dev```
+
+4. Run the Data Retrieval service in a seperate terminal.
+- ```$ cd ../DataRetrieval ```
+- ```$ go build kafka-connectors/connector.go```
+- ```$ go run kafka-connectors/connector.go```
+
+5. Run the Model Execution service in a seperate terminal.
+- ```$ cd ../ModelExecution```
+- ```$ python ModelExecution.py```
+
+6. Run the Post Analysis service in a seperate terminal.
+- ```$ cd ../Inference```
+- ```$ python Inference.py```
+
+Once everything starts running up, the application can be accessed using ```localhost:8080/```
 
 # Team Members:
 Anurag Kumar  
