@@ -79,7 +79,10 @@ Follow the below instructions. Move to clone directory.
 - ```$ cd ../Inference```
 - ```$ python Inference.py```
 
-Once everything starts running up, the application can be accessed using ```localhost:8080/```
+Once everything starts running up, the application can be accessed using ```localhost:8080/```. 
+
+#NOTE : 
+- The current running branch is ```apiexec``` 
 
 # Team Members:
 Anurag Kumar  
