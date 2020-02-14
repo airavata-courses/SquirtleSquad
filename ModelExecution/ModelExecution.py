@@ -31,11 +31,11 @@ class Execution:
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
-            mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-            decodedFile = mssg.action.value
-            print("Recieved filename:", decodedFile)
             imageFilename=""
-            if len(decodedFile) > 0:
+            if len(mssg) > 0:
+                mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+                decodedFile = mssg.action.value
+                print("Recieved filename:", decodedFile)
                 if decodedFile == "KATX20130717_195021_V06":
                     imageFilename = self.Model1(decodedFile)
                 if decodedFile == "Level2_KATX_20130717_1950.ar2v":
