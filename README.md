@@ -26,18 +26,21 @@ For internal messaging between the microservices we have used Kafka. The fronten
 - The user requests for a model to execute. This requests goes to the API Gateway. 
 - The API Gateway sends this request as a message to the Data Retrieval API. The Data Retrieval API pulls the data the from a known link and stores it in "/Data" on the local machine. The Data Retrieval(DR) API then sends the name of the downloaded file through Kakfa to the Model Execution API.
 - The Model Execution(ME) API recieves the message and calls a function to execute the model. The generated data is again stored in "/Data" and the name of the generated file is sent to the Post Analysis(PA) API using Kafka.
-- The PA API then creates a .png plot file and sends this to the API Gateway through Kafka.  
+- The PA API then creates a .png plot file and sends this to the API Gateway through Kafka. 
+- The final data should be stored in the folder ```\Data```. 
+
+### Bugs
+- We are unable to display results on frontend.
 
 ## Requirements
 To run this application, make sure you have anaconda package for python, go and node.js installed.
 - For installing nodejs follow instructions at https://nodejs.org/en/download/.
 - Download and install anaconda v(3.7) from https://docs.anaconda.com/anaconda/install/.
-- To install go, open up a terminal and type ```$ sudo apt-get go-golang```.
+- To install go, open up a terminal and type ```$ sudo apt-get install golang```.
 - This application uses Kafka as the main messaging service between services. To install kafka, follow https://kafka.apache.org/quickstart.
 
 ### Packages
 - To run this application, install py-ART package for nexrad dataset. This can be installed using the command ```$ conda install -c conda-forge arm_pyart ```. Make sure you have anaconda installed before running this. If you have a ```conda command not found``` error, make sure you have added the path to your anaconda3 directory in your ~/.bashrc file.
-- 
 
 ## Installation
 Follow the below instructions. Move to clone directory.

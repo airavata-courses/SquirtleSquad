@@ -10,10 +10,8 @@ import matplotlib.pyplot as plt
 import pyart
 import sys
 from kafka import KafkaProducer, KafkaConsumer
-from flask import Flask
-
-app = Flask(__name__)
-
+import json
+from collections import namedtuple
 
 class Execution:
     def __init__(self):
@@ -33,16 +31,26 @@ class Execution:
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
-            filename = mssg
-            decodedFile = filename.value.decode('utf-8')
+            #mssg = json.loads(mssg.value)
+            #action = json.loads(mssg.action)
+            #decodedFile = action['name']
+            mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+            decodedFile = mssg.action.value
             print("Recieved filename:", decodedFile)
             imageFilename=""
             if len(decodedFile) > 0:
                 if decodedFile == "KATX20130717_195021_V06":
-                    imageFilename = self.Model1(filename.value.decode('utf-8'))
+                    imageFilename = self.Model1(decodedFile)
                 if decodedFile == "Level2_KATX_20130717_1950.ar2v":
-                    imageFilename = self.Model2(filename.value.decode('utf-8'))
-                self.publish_message(message = imageFilename, topic = 'modelexecution')
+                    imageFilename = self.Model2(decodedFile)
+                #Since we need to pass the message to the next API call, we
+                #need to change the mssage parameters and convert mssg back from json object to string
+                mssg = {"sessID": mssg.sessID, 
+                        "userID": mssg.userID,
+                        "action":{"name":"postanalysis", "value": imageFilename},
+                        "timeStamp": mssg.timeStamp}
+                mssg = json.dumps(mssg)
+                self.publish_message(message = mssg, topic = 'modelexecution')
                 print("File has published from ModelExecution..")
         return filename
 

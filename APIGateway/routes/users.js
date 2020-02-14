@@ -9,17 +9,17 @@ const Producer = kafka.Producer,
       client = new kafka.KafkaClient(),
       producer = new Producer(client);
 
-    async function publish(topic, message) {
-        payloads = [{ topic: topic, messages: JSON.stringify(message)}];
-        console.log("sending");
-        let push_status = producer.send(payloads, (err, data) => {
-            if (err) {
-                console.log('[kafka-producer -> '+topic+']: broker update failed');
-            } else {
-                console.log('[Message:'+payloads[0].messages+' passed to '+topic+']: broker update success');    
-            }
-        });
-    }
+async function publish(topic, message) {
+    payloads = [{ topic: topic, messages: JSON.stringify(message)}];
+    console.log("sending");
+    let push_status = producer.send(payloads, (err, data) => {
+        if (err) {
+            console.log('[kafka-producer -> '+topic+']: broker update failed');
+        } else {
+            console.log('[Message:'+payloads[0].messages+' passed to '+topic+']: broker update success');    
+        }
+    });
+}
 
 router.get('/login', (req, res) => {
     res.render('login');

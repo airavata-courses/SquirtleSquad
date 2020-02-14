@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 #import pyart
 import sys
 from kafka import KafkaProducer, KafkaConsumer
+import json
+from collections import namedtuple
 
 class Inference:
     def __init__(self):
@@ -29,16 +31,20 @@ class Inference:
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
-            filename = mssg
-            decodedFile = mssg.value.decode('utf-8')
+            mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+            decodedFile = mssg.action.value
             print("Recieved filename:", decodedFile)
             if len(decodedFile)>0:
                 self.postAnalysis(decodedFile)
-                self.publish_message(message = decodedFile, topic = 'postanalysis')
+                #Since we need to pass the message to the next API call, we
+                #need to change the mssage parameters and convert mssg back from json object to string
+                mssg = {"sessID": mssg.sessID, 
+                        "userID": mssg.userID,
+                        "action":{"name":"apigateway", "value": mssg.action.value},
+                        "timeStamp": mssg.timeStamp}
+                mssg = json.dumps(mssg)
+                self.publish_message(message = mssg, topic = 'postanalysis')
                 print("Filename published from inference..")
-        
-
-    
 
 if __name__ == '__main__':
     inf = Inference()
