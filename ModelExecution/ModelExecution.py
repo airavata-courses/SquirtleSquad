@@ -31,9 +31,6 @@ class Execution:
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
-            #mssg = json.loads(mssg.value)
-            #action = json.loads(mssg.action)
-            #decodedFile = action['name']
             mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
             decodedFile = mssg.action.value
             print("Recieved filename:", decodedFile)
