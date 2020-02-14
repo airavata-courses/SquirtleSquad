@@ -19,7 +19,7 @@ const kafka = require('kafka-node'),
     Consumer = kafka.Consumer,
     client = new kafka.KafkaClient(),
     //producer = new Producer(client),
-    consumer = new Consumer(client,[{ topic: 'addAction'}],{autoCommit: true});
+    consumer = new Consumer(client,[{ topic: 'addAction'}, { topic: 'apigateway'}, { topic: 'DataRetrieval'}, { topic: 'postanalysis'}],{autoCommit: true});
 
 
 
@@ -79,54 +79,54 @@ consumer.on('message', function (message) {
 //Kafka pipelines
 
 
-const consumerApiGate = new Consumer(client,[{ topic: 'apigateway'}],{autoCommit: true}),
-consumerDataRet = new Consumer(client,[{ topic: 'DataRetrieval'}],{autoCommit: true}),
-consumerModExec = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
+// const consumerApiGate = new Consumer(client,[{ topic: 'apigateway'}],{autoCommit: true}),
+// consumerDataRet = new Consumer(client,[{ topic: 'DataRetrieval'}],{autoCommit: true}),
+// consumerModExec = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
-consumerApiGate.on('message', function (message) {
-  console.log(message);
-  const sess = new Session(JSON.parse(message.value));
-  sess.save(function (err, data) {
-    if (err){
-      return console.error(err);
-    } 
-    console.log("Saved Data: ",data);
-  });
-});
+// consumerApiGate.on('message', function (message) {
+//   console.log(message);
+//   const sess = new SessionJobs(JSON.parse(message.value));
+//   sess.save(function (err, data) {
+//     if (err){
+//       return console.error(err);
+//     } 
+//     console.log("Saved Data: ",data);
+//   });
+// });
 
-consumerDataRet.on('message', function (message) {
-  console.log(message);
-  const sess = new Session(JSON.parse(message.value));
-  sess.save(function (err, data) {
-    if (err){
-      return console.error(err);
-    } 
-    console.log("Saved Data: ",data);
-  });
-});
+// consumerDataRet.on('message', function (message) {
+//   console.log(message);
+//   const sess = new SessionJobs(JSON.parse(message.value));
+//   sess.save(function (err, data) {
+//     if (err){
+//       return console.error(err);
+//     } 
+//     console.log("Saved Data: ",data);
+//   });
+// });
 
-consumerModExec.on('message', function (message) {
-  console.log(message);
-  const sess = new Session(JSON.parse(message.value));
-  sess.save(function (err, data) {
-    if (err){
-      return console.error(err);
-    } 
-    console.log("Saved Data: ",data);
-  });
-});
+// consumerModExec.on('message', function (message) {
+//   console.log(message);
+//   const sess = new SessionJobs(JSON.parse(message.value));
+//   sess.save(function (err, data) {
+//     if (err){
+//       return console.error(err);
+//     } 
+//     console.log("Saved Data: ",data);
+//   });
+// });
 
-consumerApiGate.on('error', function(err) {
-  console.log('error', err);
-});
+// consumerApiGate.on('error', function(err) {
+//   console.log('error', err);
+// });
 
-consumerDataRet.on('error', function(err) {
-  console.log('error', err);
-});
+// consumerDataRet.on('error', function(err) {
+//   console.log('error', err);
+// });
 
-consumerModExec.on('error', function(err) {
-  console.log('error', err);
-});
+// consumerModExec.on('error', function(err) {
+//   console.log('error', err);
+// });
 
 const PORT = 8082;
 sess.listen(PORT, console.log(`Server at port ${PORT}`));

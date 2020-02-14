@@ -58,21 +58,19 @@ consumer.on('message', function(message) {
 
 app.get('/getPlot',(req, res)=>{
     let fname = req.query.value;
-    
-    //console.log("Dir:",__dirname);
     let img = '../Data/'+fname+'_multiplot.png';
-    console.log("File Name:",img);
-    let fdir = path.join(__dirname, '../Data/'+fname+'_multiplot.png');
-    console.log("Dir:",fdir);
+    let fdir;
     if(fname === "KATX20130717_195021_V06") {
-        //img = new Buffer(fdir, "binary").toString("base64");
-        img = Buffer.from(fdir,'base64')
+        fdir = path.join(__dirname, '../Data/'+fname+'_multiplot.png');
     }
     if(fname === "Level2_KATX_20130717_1950.ar2v") {
-        img = new Buffer(fdir, "binary").toString("base64");
+        path.join(__dirname, '../Data/'+fname+'_reflectivity.png');
     }
-    console.log(img);
-    res.sendFile(fdir);
+    let bitmap = fs.readFileSync(fdir);
+    console.log("Dir:",fdir);
+    img = Buffer(bitmap).toString('base64')
+    //console.log(img);
+    res.send(img);
 })
 
 

@@ -29,7 +29,7 @@
         <button onclick="logout();" class="btn">Logout</button>
     </form>
     <br>
-    <img id= 'plot'  src="" class="responsive-img">
+    <img id= 'plot'  src="" alt="Red dot" class="responsive-img">
   </div>
 
   <script
@@ -80,7 +80,8 @@ function getPlot(){
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-        document.getElementById('plot').setAttribute('src',"data:image/png;base64,"+this.responseText);
+      //console.log(this.responseText);
+      document.getElementById('plot').setAttribute('src',"data:image/png;base64,"+this.responseText);
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
