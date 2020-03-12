@@ -46,7 +46,7 @@ function loadDoc() {
       document.getElementById("chooseFileBox").value = this.responseText;
     }
   };
-  xhttp.open("GET", "http://localhost:8080/users/getState", true);
+  xhttp.open("GET", "http://apigateway:8080/users/getState", true);
   xhttp.send();
 }
 
@@ -60,7 +60,7 @@ function setSate() {
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("POST", "http://localhost:8080/users/setState?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("POST", "http://apigateway:8080/users/setState?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }
 
@@ -85,7 +85,7 @@ function getPlot(){
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("GET", "http://localhost:8080/getplot?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("GET", "http://apigateway:8080/getplot?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }
 
@@ -97,7 +97,7 @@ function getModel(){
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("GET", "http://localhost:8080/users/getModel?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("GET", "http://apigateway:8080/users/getModel?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }
 

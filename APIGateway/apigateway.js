@@ -29,20 +29,26 @@ app.use(express.static('../Data/'));
 //Kafka pipelines
 Producer = kafka.Producer;
 Consumer = kafka.Consumer;
-client = new kafka.KafkaClient();
+console.log("Hi");
+client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
+//client = new kafka.KafkaClient();
 producer = new Producer(client);
-consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
+//consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
-consumer.connect();
+//consumer.connect();
 
-consumer.on('message', function(message) {
-    console.log('connected', message);
-    console.log("Message consumed:",message.value.toString());
-    const decodedFile = utf8.decode(message.value);
-    // app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
-
-    // }); 
+producer.on('ready', function () {
+    console.log("API Producer Ready!");
 });
+
+// consumer.on('message', function(message) {
+//     console.log('connected', message);
+//     console.log("Message consumed:",message.value.toString());
+//     const decodedFile = utf8.decode(message.value);
+//     // app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
+
+//     // }); 
+// });
 
 app.get('/getPlot',(req, res)=>{
     let fname = req.query.value;
@@ -62,39 +68,39 @@ app.get('/getPlot',(req, res)=>{
 })
 
 
-producer.on('ready', async function() {
-    const payloads = [{
-        topic: 'apigateway',
-        message: "Message for some service from apiGate."
-    }];
-    let push_status = producer.send(payloads, (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log('message sent into TOPIC: apigateway');
-         }
-    });
-});
+// producer.on('ready', async function() {
+//     const payloads = [{
+//         topic: 'apigateway',
+//         message: "Message for some service from apiGate."
+//     }];
+//     let push_status = producer.send(payloads, (err, data) => {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             console.log('message sent into TOPIC: apigateway');
+//          }
+//     });
+// });
 
-producer.on('ready', async function() {
-    const payloads = [{
-        topic: 'apigateway',
-        message: "Message for some service from apiGate."
-    }];
-    let push_status = producer.send(payloads, (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log('message sent into TOPIC: apigateway');
-         }
-    });
-});
+// producer.on('ready', async function() {
+//     const payloads = [{
+//         topic: 'apigateway',
+//         message: "Message for some service from apiGate."
+//     }];
+//     let push_status = producer.send(payloads, (err, data) => {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             console.log('message sent into TOPIC: apigateway');
+//          }
+//     });
+// });
 
-producer.on('error', function(err) {
-    console.log(err);
-    console.log('[kafka-producer -> '+kafka_topic+']: connection errored');
-    throw err;
-});
+// producer.on('error', function(err) {
+//     console.log(err);
+//     //console.log('[kafka-producer -> '+kafka_topic+']: connection errored');
+//     throw err;
+// });
 
 
 
