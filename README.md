@@ -51,15 +51,18 @@ Follow the below instructions. Move to clone directory.
 - Use ```$ bin/kafka-topics.sh --list --bootstrap-server localhost:9092``` to list out all the topics. Make sure all the topics mentioned above have been created.
 
 2. Run the API Gateway service
--  ```$ cd SquirtleSquad/APIGateway ```
+- ```$ cd SquirtleSquad/APIGateway ```
+- ```$ npm install```
 - ```$ npm run dev```
 
 3. Run the User Management service in a seperate terminal.
--  ```$ cd ../UserManagement ```
+- ```$ cd ../UserManagement ```
+- ```$ npm install```
 - ```$ npm run dev```
 
 4. Run the Session Management service in a seperate terminal.
 -  ```$ cd ../SessionManagement ```
+- ```$ npm install```
 - ```$ npm run dev```
 
 5. Run the Data Retrieval service in a seperate terminal.
@@ -76,7 +79,10 @@ Follow the below instructions. Move to clone directory.
 - ```$ cd ../Inference```
 - ```$ python Inference.py```
 
-Once everything starts running up, the application can be accessed using ```localhost:8080/```
+Once everything starts running up, the application can be accessed using ```localhost:8080/```. 
+
+#NOTE : 
+- The current running branch is ```apiexec``` 
 
 # Team Members:
 Anurag Kumar  
