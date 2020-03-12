@@ -11,14 +11,12 @@ const sjobSchema = new mongoose.Schema({
         required: true
     },  
     action: {
-            name:{
-                type: String,
-                required: true
-            },
-            value: {
-                type: String,
-                required: false
-            }
+        type: String,
+        required: true
+    },
+    value: {
+        type: String,
+        required: false
     },
     timeStamp: {
         type: Date,

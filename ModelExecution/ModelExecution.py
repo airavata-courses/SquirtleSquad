@@ -16,7 +16,7 @@ from collections import namedtuple
 class Execution:
     def __init__(self):
         self.topic = 'DataRetrieval' 
-        self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
+        self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
                                     
     def publish_message(self, message, topic, key=None):
         if key:
@@ -27,14 +27,14 @@ class Execution:
 
     def getFilename(self):
         consumer = KafkaConsumer(self.topic,
-                                 bootstrap_servers = 'localhost:9092', 
+                                 bootstrap_servers = 'kafka:9092', 
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
             imageFilename=""
             if len(mssg) > 0:
                 mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-                decodedFile = mssg.action.value
+                decodedFile = mssg.value
                 print("Recieved filename:", decodedFile)
                 if decodedFile == "KATX20130717_195021_V06":
                     imageFilename = self.Model1(decodedFile)
@@ -44,7 +44,8 @@ class Execution:
                 #need to change the mssage parameters and convert mssg back from json object to string
                 mssg = {"sessID": mssg.sessID, 
                         "userID": mssg.userID,
-                        "action":{"name":"postanalysis", "value": imageFilename},
+                        "action": "postanalysis", 
+			            "value": imageFilename,
                         "timeStamp": mssg.timeStamp}
                 mssg = json.dumps(mssg)
                 self.publish_message(message = mssg, topic = 'modelexecution')

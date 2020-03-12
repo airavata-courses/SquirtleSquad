@@ -17,7 +17,7 @@ mongoose.connect(db, { useNewUrlParser: true })
 const kafka = require('kafka-node'),
     //Producer = kafka.Producer,
     Consumer = kafka.Consumer,
-    client = new kafka.KafkaClient(),
+    client = new kafka.KafkaClient({kafkaHost:'kafka:9092'}),
     //producer = new Producer(client),
     consumer = new Consumer(client,[{ topic: 'addAction'}, { topic: 'apigateway'}, { topic: 'DataRetrieval'}, { topic: 'postanalysis'}],{autoCommit: true});
 
@@ -32,7 +32,7 @@ sess.get('/getSessionID', async(req, res)=>{
   session.save(function(err, data){
      if(err) return console.error(err);
      else{
-        let sessjobs = new SessionJobs({sessID: data._id, userID: req.query.userID, action: {name: 'login' }, timeStamp: req.query.timeStamp});
+        let sessjobs = new SessionJobs({sessID: data._id, userID: req.query.userID, action: 'login', timeStamp: req.query.timeStamp});
         sessjobs.save(function (err, data2) {
           if (err) return console.error(err);
             console.log("Saved Data in sessJobs: ",data);
