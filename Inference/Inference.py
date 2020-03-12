@@ -1,6 +1,5 @@
 from matplotlib import image 
 import matplotlib.pyplot as plt
-#import pyart
 import sys
 from kafka import KafkaProducer, KafkaConsumer
 import json
