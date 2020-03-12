@@ -18,7 +18,7 @@ services:
     networks: 
       - ads_network
     environment:
-      KAFKA_CREATE_TOPICS: "addAction:1:1,apigateway:1:1,DataRetrieval:1:1,postanalysis:1:1"
+      KAFKA_CREATE_TOPICS: "addAction:1:1,apigateway:1:1,DataRetrieval:1:1,postanalysis:1:1, modelexecution:1:1"
       KAFKA_ADVERTISED_HOST_NAME: kafka # docker-machine ip
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_PORT: 9092
@@ -51,6 +51,20 @@ services:
     ports:
       - "8082:8082"
     networks: 
+      - ads_network
+    depends_on:
+      - kafka
+
+  modelexecution:
+    build: "./ModelExecution"
+    networks:
+      - ads_network
+    depends_on:
+      - kafka
+
+  inference:
+    build: "./Inference"
+    networks:
       - ads_network
     depends_on:
       - kafka

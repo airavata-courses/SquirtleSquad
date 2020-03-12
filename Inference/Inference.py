@@ -10,7 +10,7 @@ class Inference:
     def __init__(self):
         #Change the below topic accordingly...
         self.topic = 'modelexecution' 
-        self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
+        self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
                                        
     def publish_message(self,message, topic, key=None):
         if key:
@@ -27,12 +27,12 @@ class Inference:
 
     def getFilename(self):
         consumer = KafkaConsumer(self.topic,
-                                 bootstrap_servers = 'localhost:9092', 
+                                 bootstrap_servers = 'kafka:9092', 
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
             mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-            decodedFile = mssg.action.value
+            decodedFile = mssg.value
             print("Recieved filename:", decodedFile)
             if len(decodedFile)>0:
                 self.postAnalysis(decodedFile)
@@ -40,7 +40,8 @@ class Inference:
                 #need to change the mssage parameters and convert mssg back from json object to string
                 mssg = {"sessID": mssg.sessID, 
                         "userID": mssg.userID,
-                        "action":{"name":"apigateway", "value": mssg.action.value},
+                        "action":"apigateway", 
+			"value": mssg.value,
                         "timeStamp": mssg.timeStamp}
                 mssg = json.dumps(mssg)
                 self.publish_message(message = mssg, topic = 'postanalysis')
