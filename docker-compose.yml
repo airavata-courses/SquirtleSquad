@@ -34,10 +34,14 @@ services:
     networks: 
       - ads_network
     depends_on: 
+      - zookeeper
       - kafka
       - usermanagement
       - sessionmanagement
-    restart: unless-stopped
+      - modelexecution
+      - inference
+    command: bash -c "sleep 5; start.sh"
+    restart: on-failure
 
   usermanagement:
     build: "./UserManagement"
@@ -45,7 +49,11 @@ services:
       - "8081:8081"
     networks: 
       - ads_network
-    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka
+    command: bash -c "sleep 5; start.sh"
+    restart: on-failure
 
   sessionmanagement:
     build: "./SessionManagement"
@@ -54,24 +62,31 @@ services:
     networks: 
       - ads_network
     depends_on:
+      - zookeeper
       - kafka
-    restart: unless-stopped
+      - usermanagement
+    command: bash -c "sleep 5; start.sh"
+    restart: on-failure
 
   modelexecution:
     build: "./ModelExecution"
     networks:
       - ads_network
     depends_on:
+      - zookeeper
       - kafka
-    restart: unless-stopped
+    command: bash -c "sleep 5; start.sh"
+    restart: on-failure
 
   inference:
     build: "./Inference"
     networks:
       - ads_network
     depends_on:
+      - zookeeper
       - kafka
-    restart: unless-stopped
+    command: bash -c "sleep 5; start.sh"
+    restart: on-failure
 
 networks: 
   ads_network:
