@@ -45,6 +45,7 @@ services:
       - "8081:8081"
     networks: 
       - ads_network
+    restart: unless-stopped
 
   sessionmanagement:
     build: "./SessionManagement"
@@ -54,6 +55,7 @@ services:
       - ads_network
     depends_on:
       - kafka
+    restart: unless-stopped
 
   modelexecution:
     build: "./ModelExecution"
@@ -61,6 +63,7 @@ services:
       - ads_network
     depends_on:
       - kafka
+    restart: unless-stopped
 
   inference:
     build: "./Inference"
@@ -68,6 +71,7 @@ services:
       - ads_network
     depends_on:
       - kafka
+    restart: unless-stopped
 
 networks: 
   ads_network:
