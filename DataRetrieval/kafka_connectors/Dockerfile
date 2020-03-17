@@ -14,6 +14,8 @@ ADD . /app
 WORKDIR /app
 # we run go build to compile the binary
 # executable of our Go program
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.5.0/wait /wait
+RUN chmod +x /wait
 RUN go get github.com/Shopify/sarama
 RUN go build -o connector .
 # Our start command which kicks off

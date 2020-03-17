@@ -138,7 +138,7 @@ router.get('/getState', (req, res)=>{
             res.sendStatus(403);
         }
         console.log(authData._id);
-        const result = await axios.get(`localhost:8082/getLastSession?userID=${authData._id}`);
+        const result = await axios.get(`sessionamangement:8082/getLastSession?userID=${authData._id}`);
         console.log(result.data);
         res.send(result.data);
     });
