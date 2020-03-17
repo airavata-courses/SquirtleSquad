@@ -18,6 +18,7 @@ services:
     networks: 
       - ads_network
     environment:
+      WAIT_HOSTS: zookeper:2181
       KAFKA_CREATE_TOPICS: "addAction:1:1,apigateway:1:1,DataRetrieval:1:1,postanalysis:1:1, modelexecution:1:1"
       KAFKA_ADVERTISED_HOST_NAME: kafka # docker-machine ip
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
