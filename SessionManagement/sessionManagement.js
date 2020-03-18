@@ -43,35 +43,31 @@ sess.get('/getSessionID', async(req, res)=>{
 });
 
 sess.get('/getLastSession',async (req, res)=>{
+  console.log("sessionManagement: Getting previous session")
   session = Session.find({userID: req.query.userID}).sort({timeStamp: -1}).limit(2)
             .then(session => {
               console.log("2nd Last Session",session);
-              state = SessionJobs.find({sessID: session[1]._id}).sort({timeStamp: -1})
+              state = SessionJobs.find({sessID: session[1]._id, action: "state"}).sort({timeStamp: -1})
               .then(async (jobs) => {
                 if(jobs == null){
-                  console.log("Nothig!!!!!");
+                  console.log("Nothing!!!!!");
                   res.send("None");
                 }
                 else
                 {
-                  console.log("jobs, jobs.length");
+                  console.log(jobs, jobs.length);
                   console.log("Restoring Jobs");
-                  for(i = 0; i< jobs.length; i++){
-                      if(jobs[i].action.name == 'state'){
-                        console.log('Last State: ', jobs[i].action.value);
-                        res.send(jobs[i].action.value);
-                        break;
-                      }
-                  //
-                }}
+                  res.send(jobs[0].value);
+                }
               });
             });
 });
 
 consumer.on('message', function (message) {
   console.log(message);
-  if (message.length == 0){
+  if (message.length != 0){
     let sessjobs = new SessionJobs(JSON.parse(message.value));
+    console.log("Saving Actions");
     sessjobs.save(function (err, data) {
       if (err) return console.error(err);
         console.log("Saved Data in sessJobs: ",data);
