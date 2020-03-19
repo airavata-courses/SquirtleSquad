@@ -1,0 +1,21 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: apigateway
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         app: apigateway
+   template:
+      metadata:
+         labels:
+            app: apigateway
+      spec:
+         containers:
+            - name: apigateway-kubernetes
+            # replace <image-tag> with your actual image
+              image: maxprimex123/squirtlesquad_apigateway:v2
+              ports:
+                - containerPort: 8080
