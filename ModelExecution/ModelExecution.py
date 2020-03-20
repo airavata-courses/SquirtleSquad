@@ -25,6 +25,10 @@ class Execution:
         self.producer.send(topic, key = key, value = val)
         self.producer.flush()
 
+    def extract_data(message):
+        message = json.loads(message.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        print(message['currently'])
+
     def getFilename(self):
         consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers = 'kafka:9092', 

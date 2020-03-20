@@ -49,7 +49,7 @@ sess.get('/getLastSession',async (req, res)=>{
               state = SessionJobs.find({sessID: session[1]._id}).sort({timeStamp: -1})
               .then(async (jobs) => {
                 if(jobs == null){
-                  console.log("Nothig!!!!!");
+                  console.log("Nothing!!!!!");
                   res.send("None");
                 }
                 else

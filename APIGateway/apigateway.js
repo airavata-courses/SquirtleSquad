@@ -31,24 +31,24 @@ Producer = kafka.Producer;
 Consumer = kafka.Consumer;
 console.log("Hi");
 client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
-//client = new kafka.KafkaClient();
+client = new kafka.KafkaClient();
 producer = new Producer(client);
-//consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
+consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
-//consumer.connect();
+consumer.connect();
 
 producer.on('ready', function () {
     console.log("API Producer Ready!");
 });
 
-// consumer.on('message', function(message) {
-//     console.log('connected', message);
-//     console.log("Message consumed:",message.value.toString());
-//     const decodedFile = utf8.decode(message.value);
-//     // app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
+consumer.on('message', function(message) {
+    console.log('connected', message);
+    console.log("Message consumed:",message.value.toString());
+    const decodedFile = utf8.decode(message.value);
+    // app.get(`users\dashboard\PostAnalysis?imgName=${decodedFile}`, (req, res) => {
 
-//     // }); 
-// });
+    // }); 
+ });
 
 app.get('/getPlot',(req, res)=>{
     let fname = req.query.value;
