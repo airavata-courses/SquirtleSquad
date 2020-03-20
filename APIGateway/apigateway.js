@@ -31,6 +31,7 @@ Producer = kafka.Producer;
 Consumer = kafka.Consumer;
 console.log("Hi");
 client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
+//client = new kafka.KafkaClient({kafkaHost:'localhost:9092'});
 client = new kafka.KafkaClient();
 producer = new Producer(client);
 consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});

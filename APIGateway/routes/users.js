@@ -8,6 +8,7 @@ const axios = require('axios');
 const Producer = kafka.Producer;
 //const client = new kafka.KafkaClient();
 client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
+//client = new kafka.KafkaClient({kafkaHost:'localhost:9092'});
 producer = new Producer(client);
 
 async function publish(topic, message) {
@@ -103,6 +104,7 @@ router.post('/register', async (req, res) => {
     }
     else{
         const result = await axios.post(`http://usermanagement:8081/register?name=${name}&&email=${email}&&password=${password}`)
+        //const result = await axios.post(`http://localhost:8081/register?name=${name}&&email=${email}&&password=${password}`)
         .catch((error)=>{ console.log(error);
           });
         if(result.data.status == 'Success')
@@ -115,6 +117,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async(req, res) =>{
     const result = await axios.get(`http://usermanagement:8081/login?email=${req.body.email}&&password=${req.body.password}`)
+    //const result = await axios.get(`http://localhost:8081/login?email=${req.body.email}&&password=${req.body.password}`)    
     .catch((error)=>{ console.log(error);
     });
     //console.log('result: ',result)
@@ -139,6 +142,7 @@ router.get('/getState', (req, res)=>{
         }
         console.log(authData._id);
         const result = await axios.get(`http://sessionmanagement:8082/getLastSession?userID=${authData._id}`);
+        //const result = await axios.get(`http://localhost:8082/getLastSession?userID=${authData._id}`);
         console.log(result.data);
         res.send(result.data);
     });

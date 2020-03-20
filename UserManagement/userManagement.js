@@ -10,6 +10,7 @@ const axios = require('axios');
 
 const Producer = kafka.Producer,
       client = new kafka.KafkaClient({kafkaHost:'kafka:9092'}),
+      //client = new kafka.KafkaClient({kafkaHost:'localhost:9092'}),
       producer = new Producer(client);
 
 async function publish(topic, message) {
@@ -94,6 +95,7 @@ user.get('/login', async(req, res) =>{
             console.log('Login Success');
             const message = {sessID: userx._id, action: 'login', timeStamp: Date.now()}
             const result2 = await axios.get(`http://sessionmanagement:8082/getSessionID?userID=${userx._id}&&timeStamp=${Date.now()}`)
+            //const result2 = await axios.get(`http://localhost:8082/getSessionID?userID=${userx._id}&&timeStamp=${Date.now()}`)
             .catch((error)=>{ console.log(error);
             });
             //console.log(result2);

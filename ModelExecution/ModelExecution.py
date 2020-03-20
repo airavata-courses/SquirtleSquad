@@ -17,7 +17,8 @@ class Execution:
     def __init__(self):
         self.topic = 'DataRetrieval' 
         self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
-                                    
+        #self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
+                                     
     def publish_message(self, message, topic, key=None):
         if key:
             key = bytes(key, encoding = 'utf-8')
@@ -25,95 +26,62 @@ class Execution:
         self.producer.send(topic, key = key, value = val)
         self.producer.flush()
 
-    def extract_data(message):
-        message = json.loads(message.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-        print(message['currently'])
+    def extract_data(self, message):
+        data = message.value.currently
+        j = {
+            'time':data.time,
+            'summary':data.summary,
+            'icon':data.icon,
+            'nearestStormDistance':data.nearestStormDistance,
+            'precipIntensity':data.precipIntensity,
+            'preciProbability':data.precipProbability,
+            'precipType':data.precipType,
+            'temperature':data.temperature,
+            'apparentTemperature':data.apparentTemperature,
+            'dewPoint':data.dewPoint,
+            'humidity':data.humidity,
+            'pressure':data.pressure,
+            'windSpeed':data.windSpeed,
+            'windGust':data.windGust,
+            'windBearing':data.windBearing,
+            'cloudCover':data.cloudCover,
+            'uvIndex':data.uvIndex,
+            'visibility':data.visibility,
+            'ozone':data.ozone
+        } 
+        return j
 
     def getFilename(self):
         consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers = 'kafka:9092', 
                                  group_id=None)
+        #consumer = KafkaConsumer(self.topic,
+        #                         bootstrap_servers = 'localhost:9092', 
+        #                         group_id=None)
         print("Consumer running..")
         for mssg in consumer:
             imageFilename=""
             if len(mssg) > 0:
-                mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-                decodedFile = mssg.value
-                print("Recieved filename:", decodedFile)
-                if decodedFile == "KATX20130717_195021_V06":
-                    imageFilename = self.Model1(decodedFile)
-                if decodedFile == "Level2_KATX_20130717_1950.ar2v":
-                    imageFilename = self.Model2(decodedFile)
-                #Since we need to pass the message to the next API call, we
-                #need to change the mssage parameters and convert mssg back from json object to string
-                mssg = {"sessID": mssg.sessID, 
-                        "userID": mssg.userID,
-                        "action": "postanalysis", 
-			            "value": imageFilename,
-                        "timeStamp": mssg.timeStamp}
-                mssg = json.dumps(mssg)
-                self.publish_message(message = mssg, topic = 'modelexecution')
-                print("File has published from ModelExecution..")
+                try:
+                    mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+                    print("Recieved Message..")
+                    data = self.extract_data(mssg)
+                    data = json.dumps(data)
+                    print("Information extracted")
+                    #Since we need to pass the message to the next API call, we
+                    #need to change the mssage parameters and convert mssg back from json object to string
+                    mssg = {"sessID": mssg.sessID, 
+                            "userID": mssg.userID,
+                            "action": "postanalysis", 
+                            "value": data,
+                            "timeStamp": mssg.timeStamp}
+                    mssg = json.dumps(mssg)
+                    self.publish_message(message = mssg, topic = 'modelexecution')
+                    print("Data sent for post analysis...")
+                except Exception as e:
+                    print(e)
+                    
         return filename
-
-    def Model1(self, filename):
-        #Check to make sure this model gets the right file.
-        assert filename == "KATX20130717_195021_V06", "Incorrect filename"
-        #Path to where the file is downloaded.
-        path = "../Data/"
-        
-        radar = pyart.io.read_nexrad_archive(path + filename)
-
-        display = pyart.graph.RadarDisplay(radar)
-        fig = plt.figure(figsize=(10, 10))
-
-        ax = fig.add_subplot(221)
-        display.plot('velocity', 1, ax=ax, title='Doppler Velocity',
-                    colorbar_label='',
-                    axislabels=('', 'North South distance from radar (km)'))
-        display.set_limits((-300, 300), (-300, 300), ax=ax)
-
-        ax = fig.add_subplot(222)
-        display.plot('differential_reflectivity', 0, ax=ax,
-                    title='Differential Reflectivity', colorbar_label='',
-                    axislabels=('', ''))
-        display.set_limits((-300, 300), (-300, 300), ax=ax)
-
-        ax = fig.add_subplot(223)
-        display.plot('differential_phase', 0, ax=ax,
-                    title='Differential Phase', colorbar_label='')
-        display.set_limits((-300, 300), (-300, 300), ax=ax)
-
-        ax = fig.add_subplot(224)
-        display.plot('cross_correlation_ratio', 0, ax=ax,
-                    title='Correlation Coefficient', colorbar_label='',
-                    axislabels=('East West distance from radar (km)', ''))
-        display.set_limits((-300, 300), (-300, 300), ax=ax)
-        plt.savefig(path + filename+'_multiplot.png')
-        return filename+'_multiplot.png'
-
-    def Model2(self, filename):
-        #Check to make sure this model gets the right file.
-        assert filename == "Level2_KATX_20130717_1950.ar2v", "Incorrect filename"
-        #Path to where the file is downloaded.
-        path = "../Data/"
-        
-        # open the file, create the displays and figure
-        radar = pyart.io.read_nexrad_archive(path + filename)
-        display = pyart.graph.RadarDisplay(radar)
-        fig = plt.figure(figsize=(6, 5))
-
-        # plot super resolution reflectivity
-        ax = fig.add_subplot(111)
-        display.plot('reflectivity', 0, title='NEXRAD Reflectivity',
-                    vmin=-32, vmax=64, colorbar_label='', ax=ax)
-        display.plot_range_ring(radar.range['data'][-1]/1000., ax=ax)
-        display.set_limits(xlim=(-500, 500), ylim=(-500, 500), ax=ax)
-        plt.savefig(path + filename+'_reflectivity.png')
-        return filename+'_reflectivity.png'
-
-
-
 
 if __name__ == '__main__':
     exe = Execution()

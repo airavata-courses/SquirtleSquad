@@ -10,6 +10,7 @@ class Inference:
         #Change the below topic accordingly...
         self.topic = 'modelexecution' 
         self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
+        #self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
                                        
     def publish_message(self,message, topic, key=None):
         if key:
@@ -28,23 +29,31 @@ class Inference:
         consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers = 'kafka:9092', 
                                  group_id=None)
+        #consumer = KafkaConsumer(self.topic,
+        #                         bootstrap_servers = 'localhost:9092', 
+        #                         group_id=None)
         print("Consumer running..")
         for mssg in consumer:
             if len(mssg)>0:
-                mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-                decodedFile = mssg.value
-                print("Recieved filename:", decodedFile)
-                self.postAnalysis(decodedFile)
-                #Since we need to pass the message to the next API call, we
-                #need to change the mssage parameters and convert mssg back from json object to string
-                mssg = {"sessID": mssg.sessID, 
-                        "userID": mssg.userID,
-                        "action":"apigateway", 
-			            "value": mssg.value,
-                        "timeStamp": mssg.timeStamp}
-                mssg = json.dumps(mssg)
-                self.publish_message(message = mssg, topic = 'postanalysis')
-                print("Filename published from inference..")
+                try:
+                    mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+                    print("Recieved message:", mssg)
+                    #self.postAnalysis(decodedFile)
+                    #Since we need to pass the message to the next API call, we
+                    #need to change the mssage parameters and convert mssg back from json object to string
+                    mssg = {"sessID": mssg.sessID, 
+                            "userID": mssg.userID,
+                            "action":"apigateway", 
+                            "value": mssg.value,
+                            "timeStamp": mssg.timeStamp
+                            }
+                    mssg = json.dumps(mssg)
+                    self.publish_message(message = mssg, topic = 'postanalysis')
+                    print("Displaying data...")
+                except Exception as e:
+                    print(e)
+                    print("Data couldn't be recieved again, retry sending again..")
+                    continue
 
 if __name__ == '__main__':
     inf = Inference()
