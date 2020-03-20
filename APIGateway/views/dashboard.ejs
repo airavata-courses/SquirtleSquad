@@ -40,19 +40,22 @@
 
   <script>
 function loadDoc() {
+  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
+  console.log(url);
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       document.getElementById("chooseFileBox").value = this.responseText;
     }
   };
-  xhttp.open("GET", "http://apigateway:8080/users/getState", true);
+  xhttp.open("GET", url + "/users/getState", true);
   xhttp.send();
 }
 
 var val = document.getElementById('chooseFileBox').value;
 
 function setSate() {
+  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -60,7 +63,7 @@ function setSate() {
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("POST", "http://apigateway:8080/users/setState?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("POST", url + "/users/setState?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }
 
