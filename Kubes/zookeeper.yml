@@ -1,12 +1,11 @@
 ---
-kind: Deployment
-apiVersion: apps/v1
+kind: ReplicationController
+apiVersion: v1
 metadata:
   name: zookeeper-deployment-1
 spec:
   selector:
-    matchLabels:
-      app: zookeeper-1
+    app: zookeeper-1
   template:
     metadata:
       labels:
@@ -32,13 +31,13 @@ metadata:
 spec:
   ports:
   - name: client
-    port: 2181
+    port: 2181    
     protocol: TCP
-  - name: follower
+  - name: server
     port: 2888
     protocol: TCP
   - name: leader
     port: 3888
     protocol: TCP
   selector:
-    app: zookeeper-1
+    app: zookeeper-1  
