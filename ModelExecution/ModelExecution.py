@@ -13,6 +13,7 @@ from kafka import KafkaProducer, KafkaConsumer
 import json
 from collections import namedtuple
 
+#Testing CI by adding this comment
 class Execution:
     def __init__(self):
         self.topic = 'DataRetrieval' 
