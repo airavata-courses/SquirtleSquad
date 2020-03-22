@@ -32,6 +32,6 @@ spec:
          containers:
             - name: apigateway-kubernetes
             # replace <image-tag> with your actual image
-              image: maxprimex123/squirtlesquad_apigateway:v2
+              image: maxprimex123/squirtlesquad_apigateway:v3
               ports:
                 - containerPort: 8080

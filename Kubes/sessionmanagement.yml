@@ -32,6 +32,6 @@ spec:
          containers:
             - name: sessionmanagement-kubernetes
             # replace <image-tag> with your actual image
-              image: maxprimex123/squirtlesquad_sessionmanagement:v2
+              image: maxprimex123/squirtlesquad_sessionmanagement:v3
               ports:
                 - containerPort: 8082
