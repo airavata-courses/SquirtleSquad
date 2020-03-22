@@ -16,6 +16,8 @@ WORKDIR /app
 # executable of our Go program
 RUN go get github.com/Shopify/sarama
 RUN go build -o connector .
+RUN go build -o extract .
 # Our start command which kicks off
 # our newly created binary executable
 CMD ["/app/connector"]
+CMD ["/app/extract"]
