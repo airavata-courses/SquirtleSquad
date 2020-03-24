@@ -2,36 +2,36 @@
 apiVersion: v1
 kind: Service
 metadata:
-   name: apigateway
+   name: usermanagement
 spec:
    ports:
-    - port: 8080
+    - port: 8081
       protocol: TCP
-      targetPort: 8080
-      nodePort: 30000
+      targetPort: 8081
+      nodePort: 31500
    selector:
-      app: apigateway
+      app: usermanagement
    type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-   name: apigateway
+   name: usermanagement
    labels:
-      app: apigateway
+      app: usermanagement
 spec:
    replicas: 1
    selector:
       matchLabels:
-         app: apigateway
+         app: usermanagement
    template:
       metadata:
          labels:
-            app: apigateway
+            app: usermanagement
       spec:
          containers:
-            - name: apigateway-kubernetes
+            - name: usermanagement-kubernetes
             # replace <image-tag> with your actual image
-              image: maxprimex123/squirtlesquad_apigateway:latest
+              image: maxprimex123/squirtlesquad_usermanagement:latest
               ports:
-                - containerPort: 8080
+                - containerPort: 8081
