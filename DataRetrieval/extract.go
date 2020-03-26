@@ -3,18 +3,14 @@ package main
 import (
     "fmt"
     forecast "github.com/mlbright/darksky/v2"
-    "io/ioutil"
     "log"
     "strings"
 )
 
 func main() {
 
-    apiaccess, err := ioutil.ReadFile("api_key.txt")
-    if err != nil {
-        log.Fatal(err)
-    }
-    key := string(keybytes)
+    test = "68a391b503f11aa6fa13d405bfefdaba"
+    key := string(test)
     key = strings.TrimSpace(key)
 
     lat := "43.6595"

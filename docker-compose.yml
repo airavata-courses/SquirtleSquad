@@ -6,7 +6,7 @@ services:
     ports:
       - "2181:2181"
     hostname: zookeeper
-    networks: 
+    networks:
       - ads_network
 
   kafka:
@@ -15,7 +15,7 @@ services:
     ports:
       - "9092:9092"
     hostname: kafka
-    networks: 
+    networks:
       - ads_network
     environment:
       KAFKA_CREATE_TOPICS: "addAction:1:1,apigateway:1:1,DataRetrieval:1:1,postanalysis:1:1, modelexecution:1:1"
@@ -30,26 +30,27 @@ services:
 
   apigateway:
     build: "./APIGateway"
-    ports: 
+    ports:
       - "8080:8080"
-    networks: 
+    networks:
       - ads_network
     environment:
-      WAIT_HOSTS: kafka:9092, usermanagement:8081, sessionamangement:8082 
-    depends_on: 
+      WAIT_HOSTS: kafka:9092, usermanagement:8081, sessionamangement:8082
+    depends_on:
       - zookeeper
       - kafka
       - usermanagement
       - sessionmanagement
       - modelexecution
       - inference
+      - dataretrieval
     restart: on-failure
 
   usermanagement:
     build: "./UserManagement"
     ports:
       - "8081:8081"
-    networks: 
+    networks:
       - ads_network
     environment:
       WAIT_HOSTS: kafka:9092
@@ -62,7 +63,7 @@ services:
     build: "./SessionManagement"
     ports:
       - "8082:8082"
-    networks: 
+    networks:
       - ads_network
     environment:
       WAIT_HOSTS: kafka:9092, usermanagement:8081
@@ -71,6 +72,17 @@ services:
       - kafka
       - usermanagement
     restart: always
+
+  dataretrieval:
+    build: "./DataRetrieval"
+    networks:
+      - ads_network
+    environment:
+      WAIT_HOSTS: kafka:9092
+    depends_on:
+      - zookeeper
+      - kafka
+    restart: on-failure
 
   modelexecution:
     build: "./ModelExecution"
@@ -94,5 +106,5 @@ services:
       - kafka
     restart: on-failure
 
-networks: 
+networks:
   ads_network:

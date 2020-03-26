@@ -5,6 +5,11 @@ FROM golang:latest
 # image that will hold our application source
 # files
 RUN mkdir /app
+
+#Server setup from Session management 
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.5.0/wait /wait
+RUN chmod +x /wait
+
 # We copy everything in the root directory
 # into our /app directory
 ADD . /app
@@ -14,8 +19,15 @@ ADD . /app
 WORKDIR /app
 # we run go build to compile the binary
 # executable of our Go program
+RUN go get github.com/go-kit/kit/log
+RUN go get github.com/go-kit/kit/metrics/prometheus
+RUN go get github.com/go-kit/kit/transport/http
 RUN go get github.com/Shopify/sarama
+RUN go get github.com/mlbright/darksky/v2
+
 RUN go build -o connector .
+
 # Our start command which kicks off
 # our newly created binary executable
 CMD ["/app/connector"]
+
