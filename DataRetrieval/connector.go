@@ -147,17 +147,13 @@ func main() {
 				fmt.Println("The messages : %v", string(msg.Value))
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
-                         Value: sarama.StringEncoder(file.Value),
+                         Value: sarama.StringEncoder(msg.Value),
                    }
         partition, offset, err := masterProducer.SendMessage(link)
         fmt.Println("Producer produced")
         if err != nil {
            panic(err)
          }
-
-        if err := Download("Level2_KATX_20130717_1950.ar2v", fileUrl); err != nil {
-            panic(err)
-        }
         fmt.Println("The link (%s) has been sent with partition(%d)/offset(%d)",link.Value,partition,offset)
 
 			case <-signals:
