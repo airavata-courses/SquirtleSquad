@@ -29,10 +29,8 @@ app.use(express.static('../Data/'));
 //Kafka pipelines
 Producer = kafka.Producer;
 Consumer = kafka.Consumer;
-console.log("Hi");
-client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
-//client = new kafka.KafkaClient({kafkaHost:'localhost:9092'});
-client = new kafka.KafkaClient();
+console.log("Hi running kafka-service");
+client = new kafka.KafkaClient({kafkaHost:'kafka-service:9092'});
 producer = new Producer(client);
 consumer = new Consumer(client,[{ topic: 'postanalysis'}],{autoCommit: true});
 
