@@ -7,9 +7,9 @@ const axios = require('axios');
 
 const Producer = kafka.Producer;
 //const client = new kafka.KafkaClient();
-client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
+const client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
 //client = new kafka.KafkaClient({kafkaHost:'localhost:9092'});
-producer = new Producer(client);
+const producer = new Producer(client);
 
 async function publish(topic, message) {
     payloads = [{ topic: topic, messages: JSON.stringify(message)}];
@@ -69,7 +69,7 @@ router.get('/getModel', async(req, res)=>{
             res.sendStatus(403);
         }
         console.log("Sending ID:", authData._id);
-        const message = {sessID: authData.sessID, userID: authData._id, action: {name:'ModelExecution', value: req.query.value}, timeStamp: Date.now()}
+        const message = {sessID: authData.sessID, userID: authData._id, action: 'ModelExecution', value: req.query.value, timeStamp: Date.now()}
         console.log('Sending Model');
         publish('apigateway',message);
         

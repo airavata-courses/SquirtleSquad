@@ -18,8 +18,8 @@
       </div>
       <select id="chooseFileBox"  onchange="setSate();" name="selecting" style="display: flex">
         <option value='None'>None</option>>
-        <option value="Level2_KATX_20130717_1950.ar2v" >Level2_KATX_20130717_1950.ar2v</option>
-        <option value="KATX20130717_195021_V06" >KATX20130717_195021_V06</option>
+        <option value="New York" >New York</option>
+        <option value="Indiana" >Indiana</option>
       </select><br><br>
       <button onclick="getModel()" class="btn">Submit</button><br><br>
    
@@ -80,6 +80,7 @@ function logout(){
 }
 
 function getPlot(){
+  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -88,12 +89,13 @@ function getPlot(){
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("GET", "http://apigateway:8080/getplot?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("GET", url + "/getplot?value="+document.getElementById("chooseFileBox").value, true);
   //xhttp.open("GET", "http://localhost:8080/getplot?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }
 
 function getModel(){
+  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -101,7 +103,7 @@ function getModel(){
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("GET", "http://apigateway:8080/users/getModel?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("GET", url + "/users/getModel?value="+document.getElementById("chooseFileBox").value, true);
   //xhttp.open("GET", "http://localhost:8080/users/getModel?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }

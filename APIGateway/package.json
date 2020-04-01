@@ -4,7 +4,8 @@
   "description": "",
   "main": "apigateway.js",
   "scripts": {
-    "dev": "nodemon apigateway.js"
+    "start": "node apigateway.js.js",
+    "dev": "node apigateway.js"
   },
   "author": "",
   "license": "ISC",

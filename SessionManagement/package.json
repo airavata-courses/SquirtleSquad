@@ -4,8 +4,8 @@
   "description": "",
   "main": "sessionManagement.js",
   "scripts": {
-    "start": "node SessionManagement.js",
-    "dev": "nodemon SessionManagement.js"
+    "start": "node sessionManagement.js",
+    "dev": "node sessionManagement.js"
   },
   "author": "",
   "license": "ISC",
