@@ -147,7 +147,7 @@ func main() {
 				fmt.Println("The messages : %v", string(msg.Value))
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
-                         Value: sarama.StringEncoder(msg.Value),
+                         Value: sarama.StringEncoder(file.Value),
                    }
         partition, offset, err := masterProducer.SendMessage(link)
         fmt.Println("Producer produced")
