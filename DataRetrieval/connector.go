@@ -7,9 +7,9 @@ import (
   "net/http"
   "io"
   "net/url"
-  forecast "github.com/mlbright/darksky/v2"
+  //forecast "github.com/mlbright/darksky/v2"
   "log"
-  "strings"
+	"io/ioutil"
 
   "github.com/Shopify/sarama"
 	)
@@ -57,12 +57,23 @@ func IsValidUrl(str string) bool {
    return err == nil && u.Scheme != "" && u.Host != ""
 }
 
-
+// const message = {sessID: authData.sessID, userID: authData._id, action: 'ModelExecution', value: req.query.value, timeStamp: Date.now()}
 
 
 func main() {
 
-  test := "68a391b503f11aa6fa13d405bfefdaba"
+  resp, err := http.Get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/43.6595,79.3433")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	log.Println(string(body))
+  /*test := "68a391b503f11aa6fa13d405bfefdaba"
   key := string(test)
   key = strings.TrimSpace(key)
 
@@ -73,10 +84,11 @@ func main() {
   if err != nil {
       log.Fatal(err)
   }
-  fmt.Printf("%s: %s\n", file.Timezone, file.Currently.Summary)
-  fmt.Printf("humidity: %.2f\n", file.Currently.Humidity)
-  fmt.Printf("temperature: %.2f Celsius\n", file.Currently.Temperature)
-  fmt.Printf("wind speed: %.2f\n", file.Currently.WindSpeed)
+  fmt.Printf("%s:\n", file)
+  //fmt.Printf("humidity: %.2f\n", file.Currently.Humidity)
+  //fmt.Printf("temperature: %.2f Celsius\n", file.Currently.Temperature)
+  //fmt.Printf("wind speed: %.2f\n", file.Currently.WindSpeed)
+  */
 
 
 
@@ -91,7 +103,7 @@ func main() {
   config.Consumer.Return.Errors = true
 
   // consumer inititalisation block
-  fileUrl := "https://engineering.arm.gov/~jhelmus/pyart_example_data/Level2_KATX_20130717_1950.ar2v"
+  // fileUrl := "https://engineering.arm.gov/~jhelmus/pyart_example_data/Level2_KATX_20130717_1950.ar2v"
 
   masterConsumer, errConsumer := sarama.NewConsumer(brokers, config) //the NewConsumer allows for the brokers to be addedwhennew topics are created
 	if errConsumer != nil {
@@ -145,9 +157,11 @@ func main() {
 				fmt.Println("Consumer Initialised")
 				count++
 				fmt.Println("The messages : %v", string(msg.Value))
+
+
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
-                         Value: sarama.StringEncoder(msg.Value),
+                         Value: sarama.StringEncoder(string(body)),
                    }
         partition, offset, err := masterProducer.SendMessage(link)
         fmt.Println("Producer produced")
@@ -155,9 +169,9 @@ func main() {
            panic(err)
          }
 
-        if err := Download("Level2_KATX_20130717_1950.ar2v", fileUrl); err != nil {
-            panic(err)
-        }
+      //  if err := Download("Level2_KATX_20130717_1950.ar2v", fileUrl); err != nil {
+      //      panic(err)
+      //  }
         fmt.Println("The link (%s) has been sent with partition(%d)/offset(%d)",link.Value,partition,offset)
 
 			case <-signals:
