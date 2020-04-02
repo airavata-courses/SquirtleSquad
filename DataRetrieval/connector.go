@@ -72,7 +72,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	log.Println(string(body))
+	//log.Println(string(body))
   /*test := "68a391b503f11aa6fa13d405bfefdaba"
   key := string(test)
   key = strings.TrimSpace(key)
