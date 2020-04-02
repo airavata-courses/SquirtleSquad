@@ -66,12 +66,13 @@ router.get('/getModel', async(req, res)=>{
     jwt.verify(token, 'secretkey', (err, authData) => {
         if(err){
             console.log(err);
-            res.sendStatus(403);
+            res.send(err);
         }
         console.log("Sending ID:", authData._id);
         const message = {sessID: authData.sessID, userID: authData._id, action: 'ModelExecution', value: req.query.value, timeStamp: Date.now()}
         console.log('Sending Model');
         publish('apigateway',message);
+        res.send('Sent model');
         
     });
     console.log('Sending Model');
