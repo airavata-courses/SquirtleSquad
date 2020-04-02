@@ -144,7 +144,7 @@ func main() {
 	}
 
   topic := "apigateway"
-	consumer, err := masterConsumer.ConsumePartition(topic, 0, sarama.OffsetOldest)
+	consumer, err := masterConsumer.ConsumePartition(topic, 0, sarama.OffsetNewest)
 	if err != nil {
 		panic(err)
 	}
