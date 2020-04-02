@@ -123,10 +123,7 @@ func main() {
 
   //offset inititalisation
 
-  lastoffset, err := client.GetOffset("apigateway",0,sarama.OffsetNewest)
-      if err != nil {
-          panic(err)
-      }
+
 
 
 
@@ -147,7 +144,7 @@ func main() {
 	}
 
   topic := "apigateway"
-	consumer, err := masterConsumer.ConsumePartition(topic, 0, sarama.OffsetLatest)
+	consumer, err := masterConsumer.ConsumePartition(topic, 0, sarama.OffsetOldest)
 	if err != nil {
 		panic(err)
 	}
