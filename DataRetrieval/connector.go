@@ -10,11 +10,13 @@ import (
   //forecast "github.com/mlbright/darksky/v2"
   "log"
 	"io/ioutil"
+  "encoding/json"
 
   "github.com/Shopify/sarama"
 	)
 
-var brokers = []string{"kafka:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
+// var brokers = []string{"kafka:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
+var brokers = []string{"localhost:9092"}
 
 func newProducer() (sarama.SyncProducer, error) {
 	config := sarama.NewConfig()
@@ -62,6 +64,8 @@ func IsValidUrl(str string) bool {
 
 func main() {
 
+  result := make(map[string]interface{})
+
   resp, err := http.Get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/43.6595,79.3433")
 	if err != nil {
 		log.Fatalln(err)
@@ -71,6 +75,9 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+
+
 
 	//log.Println(string(body))
   /*test := "68a391b503f11aa6fa13d405bfefdaba"
@@ -105,7 +112,7 @@ func main() {
   // consumer inititalisation block
   // fileUrl := "https://engineering.arm.gov/~jhelmus/pyart_example_data/Level2_KATX_20130717_1950.ar2v"
 
-  masterConsumer, errConsumer := sarama.NewConsumer(brokers, config) //the NewConsumer allows for the brokers to be addedwhennew topics are created
+  masterConsumer, errConsumer := sarama.NewConsumer(brokers, config) //the NewConsumer allows for the brokers to be added when new topics are created
 	if errConsumer != nil {
 		panic(errConsumer)
 	}
@@ -122,10 +129,6 @@ func main() {
 	}()
 
   //offset inititalisation
-
-
-
-
 
 
   defer func() {
@@ -164,8 +167,13 @@ func main() {
 				fmt.Println("Consumer Initialised")
 				count++
 				fmt.Println("The messages : %v", string(msg.Value))
+        json.Unmarshal([]byte(string(msg.Value)), &result)
+        for key, value := range result {
+                  fmt.Println("index : ", key, " value : ", value)
+          }
 
 
+         // {"sessID":1213, "userID":1213, "value":msg.value, "timeStamp":1231}
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
                          Value: sarama.StringEncoder(string(body)),

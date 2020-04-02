@@ -6,8 +6,6 @@ I would also like to cite PyART module used in this project: 'JJ Helmus and SM C
 
 Author: Anurag Kumar
 '''
-import matplotlib.pyplot as plt
-import pyart
 import sys
 from kafka import KafkaProducer, KafkaConsumer
 import json
@@ -16,10 +14,10 @@ from collections import namedtuple
 #Testing CI by adding this comment
 class Execution:
     def __init__(self):
-        self.topic = 'DataRetrieval' 
-        self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
-        #self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
-                                     
+        self.topic = 'DataRetrieval'
+        #self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
+        self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
+
     def publish_message(self, message, topic, key=None):
         if key:
             key = bytes(key, encoding = 'utf-8')
@@ -28,64 +26,64 @@ class Execution:
         self.producer.flush()
 
     def extract_data(self, message):
-        data = message.value.currently
+        data = message["value"]["currently"]
         j = {
-            'time':data.time,
-            'summary':data.summary,
-            'icon':data.icon,
-            'nearestStormDistance':data.nearestStormDistance,
-            'precipIntensity':data.precipIntensity,
-            'preciProbability':data.precipProbability,
-            'precipType':data.precipType,
-            'temperature':data.temperature,
-            'apparentTemperature':data.apparentTemperature,
-            'dewPoint':data.dewPoint,
-            'humidity':data.humidity,
-            'pressure':data.pressure,
-            'windSpeed':data.windSpeed,
-            'windGust':data.windGust,
-            'windBearing':data.windBearing,
-            'cloudCover':data.cloudCover,
-            'uvIndex':data.uvIndex,
-            'visibility':data.visibility,
-            'ozone':data.ozone
-        } 
+            'time':data["time"],
+            'summary':data["summary"],
+            'icon':data["icon"],
+            'precipIntensity':data["precipIntensity"],
+            'preciProbability':data["precipProbability"],
+            'precipType':data["precipType"],
+            'temperature':data["temperature"],
+            'apparentTemperature':data["apparentTemperature"],
+            'dewPoint':data["dewPoint"],
+            'humidity':data["humidity"],
+            'pressure':data["pressure"],
+            'windSpeed':data["windSpeed"],
+            'windGust':data["windGust"],
+            'windBearing':data["windBearing"],
+            'cloudCover':data["cloudCover"],
+            'uvIndex':data["uvIndex"],
+            'visibility':data["visibility"],
+            'ozone':data["ozone"]
+        }
         return j
 
     def getFilename(self):
         consumer = KafkaConsumer(self.topic,
-                                 bootstrap_servers = 'kafka:9092', 
+                                 bootstrap_servers = 'localhost:9092',
                                  group_id=None)
         #consumer = KafkaConsumer(self.topic,
-        #                         bootstrap_servers = 'localhost:9092', 
+        #                         bootstrap_servers = 'localhost:9092',
         #                         group_id=None)
         print("Consumer running..")
         for mssg in consumer:
-            imageFilename=""
             if len(mssg) > 0:
-                try:
-                    mssg = json.loads(mssg.value, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+                #try:
+                    #print(mssg.value)
+
+                    message = json.loads(mssg.value)#, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+                    print(mssg)
                     print("Recieved Message..")
-                    data = self.extract_data(mssg)
+                    data = self.extract_data(message)
                     data = json.dumps(data)
                     print("Information extracted")
                     #Since we need to pass the message to the next API call, we
                     #need to change the mssage parameters and convert mssg back from json object to string
-                    mssg = {"sessID": mssg.sessID, 
-                            "userID": mssg.userID,
-                            "action": "postanalysis", 
+                    mssg = {"sessID": message["sessID"],
+                            "userID": message["userID"],
+                            "action": "postanalysis",
                             "value": data,
-                            "timeStamp": mssg.timeStamp}
+                            "timeStamp": message["timeStamp"]}
                     mssg = json.dumps(mssg)
                     self.publish_message(message = mssg, topic = 'modelexecution')
                     print("Data sent for post analysis...")
-                except Exception as e:
-                    print(e)
-                    
+                #except Exception as e:
+                #    print(e)
+
         return filename
 
 if __name__ == '__main__':
     exe = Execution()
     print("Consumer started..")
     exe.getFilename()
-          
