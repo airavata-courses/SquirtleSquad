@@ -7,15 +7,29 @@ import (
   "net/http"
   "io"
   "net/url"
+  //"reflect"
   //forecast "github.com/mlbright/darksky/v2"
   "log"
 	"io/ioutil"
-  "encoding/json"
+  //"encoding/json"
+  //"github.com/tidwall/gjson"
+  gojsonq "github.com/thedevsaddam/gojsonq"
 
   "github.com/Shopify/sarama"
 	)
 
-// var brokers = []string{"kafka:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
+
+
+  type message struct {
+  	sessID     string   `json:"sessid"`
+  	userID   string   `json:"userid"`
+  	timeStamp  string   `json:"timestamp"`
+  	value  map[string]interface `json:"value"`
+  }
+
+
+
+//var brokers = []string{"kafka:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
 var brokers = []string{"localhost:9092"}
 
 func newProducer() (sarama.SyncProducer, error) {
@@ -64,7 +78,7 @@ func IsValidUrl(str string) bool {
 
 func main() {
 
-  result := make(map[string]interface{})
+  //result := make(map[string]interface{})
 
   resp, err := http.Get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/43.6595,79.3433")
 	if err != nil {
@@ -75,7 +89,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
 
 
 
@@ -166,11 +179,27 @@ func main() {
 			case msg := <-consumer.Messages():
 				fmt.Println("Consumer Initialised")
 				count++
-				fmt.Println("The messages : %v", string(msg.Value))
-        json.Unmarshal([]byte(string(msg.Value)), &result)
-        for key, value := range result {
-                  fmt.Println("index : ", key, " value : ", value)
-          }
+
+        /*var message message
+	      if err := json.Unmarshal([]byte(msg.Value), &message); err != nil {
+		         log.Fatal(err)
+	          }
+	      fmt.Printf("%+v\n", message)
+
+
+        m, ok := gjson.Parse(Json).Value().(map[string]interface{})
+        if !ok {
+                fmt.Println("Error")
+        }
+        jsonBytes, err := json.Marshal(m)
+        if err != nil {
+                fmt.Println(err)
+        }
+        fmt.Println("Chere",reflect.TypeOf(msg.Value))
+        fmt.Println(string(jsonBytes))*/
+        var Json = string(msg.Value)
+	      temp := gojsonq.New().FromString(Json).Find("msg.sessID")
+	      println(temp.(string))
 
 
          // {"sessID":1213, "userID":1213, "value":msg.value, "timeStamp":1231}
@@ -187,7 +216,7 @@ func main() {
       //  if err := Download("Level2_KATX_20130717_1950.ar2v", fileUrl); err != nil {
       //      panic(err)
       //  }
-        fmt.Println("The link (%s) has been sent with partition(%d)/offset(%d)",link.Value,partition,offset)
+        fmt.Println("The link (%s) has been sent with partition(%d)/offset(%d)",partition,offset)
 
 			case <-signals:
 				fmt.Println("Interrupt is detected")
