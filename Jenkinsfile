@@ -3,7 +3,7 @@ pipeline {
    stages {
         stage('Building SessionManagement Service') {
             steps {
-                dir('/SessionManagement/') {
+                dir('SessionManagement/') {
                        sh '''
                        docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest 
                        docker push maxprimex123/squirtlesquad_sessionmanagement:latest
