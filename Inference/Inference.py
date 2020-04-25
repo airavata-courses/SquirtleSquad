@@ -1,4 +1,4 @@
-from matplotlib import image 
+from matplotlib import image
 import matplotlib.pyplot as plt
 import sys
 from kafka import KafkaProducer, KafkaConsumer
@@ -8,10 +8,10 @@ from collections import namedtuple
 class Inference:
     def __init__(self):
         #Change the below topic accordingly...
-        self.topic = 'modelexecution' 
+        self.topic = 'modelexecution'
         self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
         #self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
-                                       
+
     def publish_message(self,message, topic, key=None):
         if key:
             key = bytes(key, encoding = 'utf-8')
@@ -27,10 +27,10 @@ class Inference:
 
     def getFilename(self):
         consumer = KafkaConsumer(self.topic,
-                                 bootstrap_servers = 'kafka:9092', 
+                                 bootstrap_servers = 'kafka:9092',
                                  group_id=None)
         #consumer = KafkaConsumer(self.topic,
-        #                         bootstrap_servers = 'localhost:9092', 
+        #                         bootstrap_servers = 'localhost:9092',
         #                         group_id=None)
         print("Consumer running..")
         for mssg in consumer:
@@ -41,9 +41,9 @@ class Inference:
                     #self.postAnalysis(decodedFile)
                     #Since we need to pass the message to the next API call, we
                     #need to change the mssage parameters and convert mssg back from json object to string
-                    mssg = {"sessID": mssg.sessID, 
+                    mssg = {"sessID": mssg.sessID,
                             "userID": mssg.userID,
-                            "action":"apigateway", 
+                            "action":"apigateway",
                             "value": mssg.value,
                             "timeStamp": mssg.timeStamp
                             }
@@ -59,5 +59,3 @@ if __name__ == '__main__':
     inf = Inference()
     print("Consumer started..")
     inf.getFilename()
-
-    

@@ -20,8 +20,8 @@ import (
 	)
 
 
-//var brokers = []string{"kafka:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
-var brokers = []string{"localhost:9092"}
+var brokers = []string{"kafka-service:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
+//var brokers = []string{"localhost:9092"}
 
 func newProducer() (sarama.SyncProducer, error) {
 	config := sarama.NewConfig()
