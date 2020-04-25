@@ -50,11 +50,11 @@ class Execution:
                 print("Information extracted")
                 #Since we need to pass the message to the next API call, we
                 #need to change the mssage parameters and convert mssg back from json object to string
-                mssg = {"sessID": message["SessID"],
-                        "userID": message["UserID"],
+                mssg = {"sessID": message["sessID"],
+                        "userID": message["userID"],
                         "action": "postanalysis",
                         "value": data,
-                        "timeStamp": message["TimeStamp"]}
+                        "timeStamp": message["timeStamp"]}
                 mssg = json.dumps(mssg)
                 self.publish_message(message = mssg, topic = 'modelexecution')
                 print("Data sent for post analysis...")
