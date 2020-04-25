@@ -15,7 +15,7 @@ from collections import namedtuple
 class Execution:
     def __init__(self):
         self.topic = 'DataRetrieval'
-        self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
+        self.producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
         #self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
     def publish_message(self, message, topic, key=None):
@@ -60,7 +60,7 @@ class Execution:
         #                         bootstrap_servers = 'localhost:9092',
         #                         group_id=None)
         consumer = KafkaConsumer(self.topic,
-                                 bootstrap_servers = 'kafka:9092',
+                                 bootstrap_servers = 'kafka-service:9092',
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:

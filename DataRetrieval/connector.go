@@ -98,40 +98,13 @@ func main() {
 	 TimeStamp   string
   }
 
-
-
-	//log.Println(string(body))
-  /*test := "68a391b503f11aa6fa13d405bfefdaba"
-  key := string(test)
-  key = strings.TrimSpace(key)
-
-  lat := "43.6595"
-  long := "-79.3433"
-
-  file, err := forecast.Get(key, lat, long, "now", forecast.CA, forecast.English)
-  if err != nil {
-      log.Fatal(err)
-  }
-  fmt.Printf("%s:\n", file)
-  //fmt.Printf("humidity: %.2f\n", file.Currently.Humidity)
-  //fmt.Printf("temperature: %.2f Celsius\n", file.Currently.Temperature)
-  //fmt.Printf("wind speed: %.2f\n", file.Currently.WindSpeed)
-  */
-
-
-
 	config := sarama.NewConfig()
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 5
 	config.Producer.Return.Successes = true // The config.Producer.Return.Successes  must return true for the producer to generate values onto the Topic
 
-  // consumer config declarations
-
   config.Consumer.Return.Errors = true
-
-  // consumer inititalisation block
-  // fileUrl := "https://engineering.arm.gov/~jhelmus/pyart_example_data/Level2_KATX_20130717_1950.ar2v"
 
   masterConsumer, errConsumer := sarama.NewConsumer(brokers, config) //the NewConsumer allows for the brokers to be added when new topics are created
 	if errConsumer != nil {
@@ -187,10 +160,7 @@ func main() {
 			case msg := <-consumer.Messages():
 				fmt.Println("Consumer Initialised")
 				count++
-        /*var Json = string(msg.Value)
-	      temp := gojsonq.New().FromString(Json).Find("msg.sessID")
-	      println(temp.(string))
-        */
+  
         fmt.Println(string(msg.Value))
         group := Message{
        	 SessID:     "3",
@@ -205,7 +175,7 @@ func main() {
         }
         os.Stdout.Write(b)
 
-         // {"sessID":1213, "userID":1213, "value":msg.value, "timeStamp":1231}
+  
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
                          Value: sarama.StringEncoder(string(b)),
@@ -216,9 +186,6 @@ func main() {
            panic(err)
          }
 
-      //  if err := Download("Level2_KATX_20130717_1950.ar2v", fileUrl); err != nil {
-      //      panic(err)
-      //  }
         fmt.Println("The link (%s) has been sent with partition(%d)/offset(%d)",partition,offset)
 
 			case <-signals:
