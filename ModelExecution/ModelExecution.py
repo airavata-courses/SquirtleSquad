@@ -44,6 +44,7 @@ class Execution:
                 message = json.loads(mssg.value)#, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
                 print(mssg)
                 print("Recieved Message..")
+                print(data)
                 data = self.extract_data(message)
                 data = json.dumps(data)
                 print("Information extracted")
@@ -57,7 +58,6 @@ class Execution:
                 mssg = json.dumps(mssg)
                 self.publish_message(message = mssg, topic = 'modelexecution')
                 print("Data sent for post analysis...")
-        return filename
 
 if __name__ == '__main__':
     exe = Execution()
