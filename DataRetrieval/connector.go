@@ -8,25 +8,16 @@ import (
   "io"
   "net/url"
   //"reflect"
-  //forecast "github.com/mlbright/darksky/v2"
+  forecast "github.com/mlbright/darksky/v2"
   "log"
-	"io/ioutil"
-  //"encoding/json"
+  "strings"
+  "strconv"
+  "encoding/json"
   //"github.com/tidwall/gjson"
-  gojsonq "github.com/thedevsaddam/gojsonq"
+  //gojsonq "github.com/thedevsaddam/gojsonq"
 
   "github.com/Shopify/sarama"
 	)
-
-
-
-  type message struct {
-  	sessID     string   `json:"sessid"`
-  	userID   string   `json:"userid"`
-  	timeStamp  string   `json:"timestamp"`
-  	value  map[string]interface `json:"value"`
-  }
-
 
 
 //var brokers = []string{"kafka:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
@@ -80,15 +71,32 @@ func main() {
 
   //result := make(map[string]interface{})
 
-  resp, err := http.Get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/43.6595,79.3433")
-	if err != nil {
-		log.Fatalln(err)
-	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
+  // using := forecast "github.com/mlbright/darksky/v2"
+  key := string("68a391b503f11aa6fa13d405bfefdaba")
+  key = strings.TrimSpace(key)
+  lat := "43.6595"
+  long := "-79.3433"
+  f, err := forecast.Get(key, lat, long, "now", forecast.CA, forecast.English)
+  if err != nil {
+      log.Fatal(err)
+  }
+  fmt.Printf("%s: %s\n", f.Timezone, f.Currently.Summary)
+  fmt.Printf("humidity: %.2f\n", f.Currently.Humidity)
+  fmt.Printf("temperature: %.2f Celsius\n", f.Currently.Temperature)
+  fmt.Printf("wind speed: %.2f\n", f.Currently.WindSpeed)
+
+	var sA string = string(f.Currently.Summary)
+	var sB string = strconv.FormatFloat(f.Currently.Humidity, 'E', -1, 64)
+	var sC string = strconv.FormatFloat(f.Currently.Temperature, 'E', -1, 64)
+	var sD string = strconv.FormatFloat(f.Currently.WindSpeed, 'E', -1, 64)
+  type Message struct {
+ 	 SessID   string
+ 	 UserID   string
+ 	 Value   []string
+	 Action string
+	 TimeStamp   string
+  }
 
 
 
@@ -179,33 +187,28 @@ func main() {
 			case msg := <-consumer.Messages():
 				fmt.Println("Consumer Initialised")
 				count++
-
-        /*var message message
-	      if err := json.Unmarshal([]byte(msg.Value), &message); err != nil {
-		         log.Fatal(err)
-	          }
-	      fmt.Printf("%+v\n", message)
-
-
-        m, ok := gjson.Parse(Json).Value().(map[string]interface{})
-        if !ok {
-                fmt.Println("Error")
-        }
-        jsonBytes, err := json.Marshal(m)
-        if err != nil {
-                fmt.Println(err)
-        }
-        fmt.Println("Chere",reflect.TypeOf(msg.Value))
-        fmt.Println(string(jsonBytes))*/
-        var Json = string(msg.Value)
+        /*var Json = string(msg.Value)
 	      temp := gojsonq.New().FromString(Json).Find("msg.sessID")
 	      println(temp.(string))
-
+        */
+        fmt.Println(string(msg.Value))
+        group := Message{
+       	 SessID:     "3",
+       	 UserID:   "userTest",
+       	 Value:  []string{ sA , sB , sC , sD },
+      	 Action: "ModelExecution",
+      	 TimeStamp:  "12:23:22",
+        }
+        b, err := json.Marshal(group)
+        if err != nil {
+       	 fmt.Println("error:", err)
+        }
+        os.Stdout.Write(b)
 
          // {"sessID":1213, "userID":1213, "value":msg.value, "timeStamp":1231}
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
-                         Value: sarama.StringEncoder(string(body)),
+                         Value: sarama.StringEncoder(string(b)),
                    }
         partition, offset, err := masterProducer.SendMessage(link)
         fmt.Println("Producer produced")

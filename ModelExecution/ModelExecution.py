@@ -26,8 +26,14 @@ class Execution:
         self.producer.flush()
 
     def extract_data(self, message):
-        data = message["value"]["currently"]
+        data = message["value"]
         j = {
+             'summary' : data[0],
+             'humidity' : data[1],
+             'temperature' : data[2],
+             'WindSpeed' : data[3]
+        }
+        """j = {
             'time':data["time"],
             'summary':data["summary"],
             'icon':data["icon"],
@@ -46,7 +52,7 @@ class Execution:
             'uvIndex':data["uvIndex"],
             'visibility':data["visibility"],
             'ozone':data["ozone"]
-        }
+        }"""
         return j
 
     def getFilename(self):
@@ -70,11 +76,11 @@ class Execution:
                     print("Information extracted")
                     #Since we need to pass the message to the next API call, we
                     #need to change the mssage parameters and convert mssg back from json object to string
-                    mssg = {"sessID": message["sessID"],
-                            "userID": message["userID"],
+                    mssg = {"sessID": message["SessID"],
+                            "userID": message["UserID"],
                             "action": "postanalysis",
                             "value": data,
-                            "timeStamp": message["timeStamp"]}
+                            "timeStamp": message["TimeStamp"]}
                     mssg = json.dumps(mssg)
                     self.publish_message(message = mssg, topic = 'modelexecution')
                     print("Data sent for post analysis...")
