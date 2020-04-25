@@ -16,7 +16,6 @@ class Execution:
     def __init__(self):
         self.topic = 'DataRetrieval'
         self.producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
-        #self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
     def publish_message(self, message, topic, key=None):
         if key:
@@ -33,60 +32,31 @@ class Execution:
              'temperature' : data[2],
              'WindSpeed' : data[3]
         }
-        """j = {
-            'time':data["time"],
-            'summary':data["summary"],
-            'icon':data["icon"],
-            'precipIntensity':data["precipIntensity"],
-            'preciProbability':data["precipProbability"],
-            'precipType':data["precipType"],
-            'temperature':data["temperature"],
-            'apparentTemperature':data["apparentTemperature"],
-            'dewPoint':data["dewPoint"],
-            'humidity':data["humidity"],
-            'pressure':data["pressure"],
-            'windSpeed':data["windSpeed"],
-            'windGust':data["windGust"],
-            'windBearing':data["windBearing"],
-            'cloudCover':data["cloudCover"],
-            'uvIndex':data["uvIndex"],
-            'visibility':data["visibility"],
-            'ozone':data["ozone"]
-        }"""
         return j
 
     def getFilename(self):
-        #consumer = KafkaConsumer(self.topic,
-        #                         bootstrap_servers = 'localhost:9092',
-        #                         group_id=None)
         consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers = 'kafka-service:9092',
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
             if len(mssg) > 0:
-                #try:
-                    #print(mssg.value)
-
-                    message = json.loads(mssg.value)#, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-                    print(mssg)
-                    print("Recieved Message..")
-                    data = self.extract_data(message)
-                    data = json.dumps(data)
-                    print("Information extracted")
-                    #Since we need to pass the message to the next API call, we
-                    #need to change the mssage parameters and convert mssg back from json object to string
-                    mssg = {"sessID": message["SessID"],
-                            "userID": message["UserID"],
-                            "action": "postanalysis",
-                            "value": data,
-                            "timeStamp": message["TimeStamp"]}
-                    mssg = json.dumps(mssg)
-                    self.publish_message(message = mssg, topic = 'modelexecution')
-                    print("Data sent for post analysis...")
-                #except Exception as e:
-                #    print(e)
-
+                message = json.loads(mssg.value)#, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+                print(mssg)
+                print("Recieved Message..")
+                data = self.extract_data(message)
+                data = json.dumps(data)
+                print("Information extracted")
+                #Since we need to pass the message to the next API call, we
+                #need to change the mssage parameters and convert mssg back from json object to string
+                mssg = {"sessID": message["SessID"],
+                        "userID": message["UserID"],
+                        "action": "postanalysis",
+                        "value": data,
+                        "timeStamp": message["TimeStamp"]}
+                mssg = json.dumps(mssg)
+                self.publish_message(message = mssg, topic = 'modelexecution')
+                print("Data sent for post analysis...")
         return filename
 
 if __name__ == '__main__':
