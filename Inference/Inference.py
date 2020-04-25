@@ -9,7 +9,7 @@ class Inference:
     def __init__(self):
         #Change the below topic accordingly...
         self.topic = 'modelexecution'
-        self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
+        self.producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
         #self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
     def publish_message(self,message, topic, key=None):
@@ -27,7 +27,7 @@ class Inference:
 
     def getFilename(self):
         consumer = KafkaConsumer(self.topic,
-                                 bootstrap_servers = 'kafka:9092',
+                                 bootstrap_servers = 'kafka-service:9092',
                                  group_id=None)
         #consumer = KafkaConsumer(self.topic,
         #                         bootstrap_servers = 'localhost:9092',
