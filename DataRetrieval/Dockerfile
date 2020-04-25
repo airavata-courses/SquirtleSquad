@@ -1,8 +1,8 @@
 FROM python:3
 ADD . /DataRetrieval
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.5.0/wait /wait
-RUN chmod +x /wait
 RUN pip3 install darksky_weather 
 RUN pip install kafka-python
 WORKDIR /DataRetrieval
+EXPOSE 8083
+ENV PYTHONUNBUFFERED=1
 CMD ["python", "dataretrieval.py"]

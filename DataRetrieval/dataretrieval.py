@@ -66,6 +66,7 @@ class DataRetrieval:
 
 
 if __name__ == "__main__":
+    print("Staring DR Service")
     DATARET = DataRetrieval()
     print("Consumer started..")
     DATARET.getData()

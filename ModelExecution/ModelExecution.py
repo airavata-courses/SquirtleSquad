@@ -53,6 +53,7 @@ class Execution:
                 print("Data sent for post analysis...")
 
 if __name__ == '__main__':
+    print("Starting ME Service")
     exe = Execution()
     print("Consumer started..")
     exe.getData()
