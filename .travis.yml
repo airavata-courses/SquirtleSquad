@@ -14,4 +14,30 @@ install:
 # command to run tests
 script:
   - pytest
+  
+after_success:
+  -cd SquirtleSquad/Kubes2/
+#delete all containers
+  -kubectl delete deployment,svc apigateway usermanagement sessionmanagement dataretrieval modelexecution inference
+  -kubectl delete deployment zookeeper-dep kafka-dep
+  -kubectl delete svc zookeeper kafka-service
+
+#create containers
+  -kubectl apply -f message.yml
+  -kubectl apply -f apigateway.yml 
+  -kubectl apply -f usermanagement.yml
+  -kubectl apply -f sessionmanagement.yml
+  -kubectl apply -f dataretrieval.yml 
+  -kubectl apply -f modelexecution.yml 
+  -kubectl apply -f inference.yml
+
+#view pods
+  -kubectl get pods
+
+#view pod logs
+  -kubectl logs <pod name>
+
+#scaling deployments example
+  -kubectl scale deployment/apigateway deployment/usermanagement deployment/sessionmanagement deployment/dataretrieval deployment/modelexecution deployment/inference --replicas=3
+
 
