@@ -22,6 +22,7 @@ import (
 
 var brokers = []string{"kafka-service:9092"} // Change to localhost depending on OS, windows refer to this string format--> "localhost:9092"
 //var brokers = []string{"localhost:9092"}
+//test edit
 
 func newProducer() (sarama.SyncProducer, error) {
 	config := sarama.NewConfig()
@@ -160,7 +161,7 @@ func main() {
 			case msg := <-consumer.Messages():
 				fmt.Println("Consumer Initialised")
 				count++
-  
+
         fmt.Println(string(msg.Value))
         group := Message{
        	 SessID:     "3",
@@ -175,7 +176,7 @@ func main() {
         }
         os.Stdout.Write(b)
 
-  
+
         link := &sarama.ProducerMessage{
                          Topic: topicProducer,
                          Value: sarama.StringEncoder(string(b)),
