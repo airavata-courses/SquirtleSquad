@@ -17,7 +17,7 @@ mongoose.connect(db, { useNewUrlParser: true })
 const kafka = require('kafka-node'),
     //Producer = kafka.Producer,
     Consumer = kafka.Consumer,
-    client = new kafka.KafkaClient({kafkaHost:'kafka:9092'}),
+    client = new kafka.KafkaClient({kafkaHost:'kafka-service:9092'}),
     //client = new kafka.KafkaClient({kafkaHost:'localhost:9092'}),
     //producer = new Producer(client),
     consumer = new Consumer(client,[{ topic: 'addAction'}, { topic: 'apigateway'}, { topic: 'DataRetrieval'}, { topic: 'postanalysis'}],{autoCommit: true});

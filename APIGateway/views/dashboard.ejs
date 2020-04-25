@@ -16,11 +16,62 @@
       <div class="file-field input-field"></div>
         <label for="models" style="display: block">Choose a model:</label><br>
       </div>
-      <select id="chooseFileBox"  onchange="setSate();" name="selecting" style="display: flex">
-        <option value='None'>None</option>>
-        <option value="New York" >New York</option>
-        <option value="Indiana" >Indiana</option>
-      </select><br><br>
+      <select id="state" name="state" style="display: block;">
+        <option value="---">---</option>
+        <option value="Alabama">Alabama</option>
+        <option value="Alaska">Alaska</option>
+        <option value="Arizona">Arizona</option>
+        <option value="Arkansas">Arkansas</option>
+        <option value="California">California</option>
+        <option value="Colorado">Colorado</option>
+        <option value="Connecticut">Connecticut</option>
+        <option value="Delaware">Delaware</option>
+        <option value="District of Columbia">District of Columbia</option>
+        <option value="Florida">Florida</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Guam">Guam</option>
+        <option value="Hawaii">Hawaii</option>
+        <option value="Idaho">Idaho</option>
+        <option value="Illinois">Illinois</option>
+        <option value="Indiana">Indiana</option>
+        <option value="Iowa">Iowa</option>
+        <option value="Kansas">Kansas</option>
+        <option value="Kentucky">Kentucky</option>
+        <option value="Louisiana">Louisiana</option>
+        <option value="Maine">Maine</option>
+        <option value="Maryland">Maryland</option>
+        <option value="Massachusetts">Massachusetts</option>
+        <option value="Michigan">Michigan</option>
+        <option value="Minnesota">Minnesota</option>
+        <option value="Mississippi">Mississippi</option>
+        <option value="Missouri">Missouri</option>
+        <option value="Montana">Montana</option>
+        <option value="Nebraska">Nebraska</option>
+        <option value="Nevada">Nevada</option>
+        <option value="New Hampshire">New Hampshire</option>
+        <option value="New Jersey">New Jersey</option>
+        <option value="New Mexico">New Mexico</option>
+        <option value="New York">New York</option>
+        <option value="North Carolina">North Carolina</option>
+        <option value="North Dakota">North Dakota</option>
+        <option value="Northern Marianas Islands">Northern Marianas Islands</option>
+        <option value="Ohio">Ohio</option><option value="Oklahoma">Oklahoma</option>
+        <option value="Oregon">Oregon</option>
+        <option value="Pennsylvania">Pennsylvania</option>
+        <option value="Puerto Rico">Puerto Rico</option>
+        <option value="Rhode Island">Rhode Island</option>
+        <option value="South Carolina">South Carolina</option>
+        <option value="South Dakota">South Dakota</option>
+        <option value="Tennessee">Tennessee</option>
+        <option value="Texas">Texas</option>
+        <option value="Utah">Utah</option>
+        <option value="Vermont">Vermont</option>
+        <option value="Virginia">Virginia</option>
+        <option value="Washington">Washington</option>
+        <option value="West Virginia">West Virginia</option>
+        <option value="Wisconsin">Wisconsin</option>
+        <option value="Wyoming">Wyoming</option>
+        </select><br><br>
       <button onclick="getModel()" class="btn">Submit</button><br><br>
    
     <button onclick="getPlot()" class="btn">Generate Plot</button><br><br>
@@ -45,14 +96,14 @@ function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("chooseFileBox").value = this.responseText;
+      document.getElementById("state").value = this.responseText;
     }
   };
   xhttp.open("GET", url + "/users/getState", true);
   xhttp.send();
 }
 
-var val = document.getElementById('chooseFileBox').value;
+var val = document.getElementById('state').value;
 
 function setSate() {
   var url = document.location.protocol + "//" + document.location.hostname + ":8080";
@@ -63,7 +114,7 @@ function setSate() {
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("POST", url + "/users/setState?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("POST", url + "/users/setState?value="+document.getElementById("state").value, true);
   xhttp.send();
 }
 
@@ -89,7 +140,7 @@ function getPlot(){
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("GET", url + "/getplot?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("GET", url + "/getplot?value="+document.getElementById("state").value, true);
   //xhttp.open("GET", "http://localhost:8080/getplot?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }
@@ -103,7 +154,7 @@ function getModel(){
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("GET", url + "/users/getModel?value="+document.getElementById("chooseFileBox").value, true);
+  xhttp.open("GET", url + "/users/getModel?value="+document.getElementById("state").value, true);
   //xhttp.open("GET", "http://localhost:8080/users/getModel?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }

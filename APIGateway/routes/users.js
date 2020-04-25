@@ -5,9 +5,12 @@ const jwt = require('jsonwebtoken');
 const kafka = require('kafka-node');
 const axios = require('axios');
 
+
+
+const states = require('../config/states').states;
 const Producer = kafka.Producer;
 //const client = new kafka.KafkaClient();
-const client = new kafka.KafkaClient({kafkaHost:'kafka:9092'});
+const client = new kafka.KafkaClient({kafkaHost:'kafka-service:9092'});
 //client = new kafka.KafkaClient({kafkaHost:'localhost:9092'});
 const producer = new Producer(client);
 
@@ -68,9 +71,10 @@ router.get('/getModel', async(req, res)=>{
             console.log(err);
             res.sendStatus(403);
         }
+        var val = states.find(function(o){ return o.state=== req.query.value})
         console.log("Sending ID:", authData._id);
-        const message = {sessID: authData.sessID, userID: authData._id, action: 'ModelExecution', value: req.query.value, timeStamp: Date.now()}
-        console.log('Sending Model');
+        const message = {sessID: authData.sessID, userID: authData._id, action: 'DataRetrieval', value: JSON.stringify(val), timeStamp: Date.now()}
+        console.log('Sending Model', message);
         publish('apigateway',message);
         
     });

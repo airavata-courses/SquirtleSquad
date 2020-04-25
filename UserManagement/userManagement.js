@@ -9,7 +9,7 @@ const axios = require('axios');
 
 
 const Producer = kafka.Producer,
-      client = new kafka.KafkaClient({kafkaHost:'kafka:9092'}),
+      client = new kafka.KafkaClient({kafkaHost:'kafka-service:9092'}),
       //client = new kafka.KafkaClient({kafkaHost:'localhost:9092'}),
       producer = new Producer(client);
 
