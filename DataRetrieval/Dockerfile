@@ -23,6 +23,7 @@ RUN go get github.com/go-kit/kit/log
 RUN go get github.com/go-kit/kit/metrics/prometheus
 RUN go get github.com/go-kit/kit/transport/http
 RUN go get github.com/Shopify/sarama
+RUN go get github.com/mlbright/darksky/v2
 
 RUN go build -o connector .
 
