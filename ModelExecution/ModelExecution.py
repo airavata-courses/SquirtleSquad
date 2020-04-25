@@ -1,9 +1,4 @@
 '''
-This code has been referred from https://github.com/ARM-DOE/pyart/tree/master/examples.
-The files available for upload have been taken from https://engineering.arm.gov/~jhelmus/pyart_example_data/
-I would also like to cite PyART module used in this project: 'JJ Helmus and SM Collis, JORS 2016, doi: 10.5334/jors.119'
-
-
 Author: Anurag Kumar
 '''
 import sys
@@ -27,24 +22,22 @@ class Execution:
     def extract_data(self, message):
         data = message["value"]
         j = {
-             'summary' : data[0],
-             'humidity' : data[1],
-             'temperature' : data[2],
-             'WindSpeed' : data[3]
+             'summary' : data['summary'],
+             'humidity' : data['humidity'],
+             'temperature' : data['temperature'],
+             'WindSpeed' : data['windSpeed']
         }
         return j
 
-    def getFilename(self):
+    def getData(self):
         consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers = 'kafka-service:9092',
                                  group_id=None)
         print("Consumer running..")
         for mssg in consumer:
             if len(mssg) > 0:
-                message = json.loads(mssg.value)#, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+                message = json.loads(mssg.value)
                 print(mssg)
-                print("Recieved Message..")
-                print(data)
                 data = self.extract_data(message)
                 data = json.dumps(data)
                 print("Information extracted")
@@ -62,4 +55,4 @@ class Execution:
 if __name__ == '__main__':
     exe = Execution()
     print("Consumer started..")
-    exe.getFilename()
+    exe.getData()
