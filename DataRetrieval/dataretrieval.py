@@ -1,7 +1,6 @@
 from kafka import KafkaProducer, KafkaConsumer
-import sys
-import os
 from forecastiopy import *
+import json
 
 
 class DataRetrieval:

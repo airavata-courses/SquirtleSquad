@@ -1,6 +1,3 @@
-from matplotlib import image
-import matplotlib.pyplot as plt
-import sys
 from kafka import KafkaProducer, KafkaConsumer
 import json
 from collections import namedtuple
