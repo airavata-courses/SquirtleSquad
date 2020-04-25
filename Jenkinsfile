@@ -5,7 +5,7 @@ pipeline {
             steps {
                 dir('SessionManagement/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest 
+                       docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest .
                        docker push maxprimex123/squirtlesquad_sessionmanagement:latest
                        '''
                 }   
@@ -16,7 +16,7 @@ pipeline {
             steps {
                 dir('/UserManagement/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_usermanagement:latest 
+                       docker build -t maxprimex123/squirtlesquad_usermanagement:latest . 
                        docker push maxprimex123/squirtlesquad_usermanagement:latest
                        '''
                 }   
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 dir('/APIGateway/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_apigateway:latest 
+                       docker build -t maxprimex123/squirtlesquad_apigateway:latest . 
                        docker push maxprimex123/squirtlesquad_apigateway:latest
                        '''
                 }   
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('/ModelExecution/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_modelexecution:latest 
+                       docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
                        docker push maxprimex123/squirtlesquad_modelexecution:latest
                        '''
                 }   
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 dir('/Inference') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_inferece:latest 
+                       docker build -t maxprimex123/squirtlesquad_inferece:latest .
                        docker push maxprimex123/squirtlesquad_inference:latest
                        '''
                 }   
