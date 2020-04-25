@@ -54,7 +54,7 @@ class Execution:
                         "userID": message["UserID"],
                         "action": "postanalysis",
                         "value": data,
-                        "timeStamp": message["TimeStamp"]}
+                        "timeStamp": message["timeStamp"]}
                 mssg = json.dumps(mssg)
                 self.publish_message(message = mssg, topic = 'modelexecution')
                 print("Data sent for post analysis...")
