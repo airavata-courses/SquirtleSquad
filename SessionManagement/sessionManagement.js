@@ -20,7 +20,7 @@ const kafka = require('kafka-node'),
     client = new kafka.KafkaClient({kafkaHost:'kafka-service:9092'}),
     //client = new kafka.KafkaClient({kafkaHost:'localhost:9092'}),
     //producer = new Producer(client),
-    consumer = new Consumer(client,[{ topic: 'addAction'}, { topic: 'apigateway'}, { topic: 'DataRetrieval'}, { topic: 'postanalysis'}],{autoCommit: true});
+    consumer = new Consumer(client,[{ topic: 'addAction'}, { topic: 'apigateway'}, { topic: 'dataretrieval'}, { topic: 'modelexecution'},{ topic: 'postanalysis'}],{autoCommit: true});
 
 
 
@@ -50,7 +50,7 @@ sess.get('/getLastSession',async (req, res)=>{
               console.log("2nd Last Session",session);
               state = SessionJobs.find({sessID: session[1]._id, action: "state"}).sort({timeStamp: -1})
               .then(async (jobs) => {
-                if(jobs == null){
+                if(jobs.length == 0){
                   console.log("Nothing!!!!!");
                   res.send("None");
                 }
