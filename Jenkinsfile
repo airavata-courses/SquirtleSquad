@@ -1,6 +1,17 @@
 pipeline {
    agent any
    stages {
+       stage('Install docker'){
+           steps{
+               sh '''
+                      sudo apt --assume-yes install docker.io
+                      sudo systemctl start docker
+                      sudo systemctl enable docker
+                      python -m pip uninstall -y urllib3
+                      python -m pip install urllib3==1.22
+                  '''
+               }
+        }
 
         stage('Build') {
             steps {
