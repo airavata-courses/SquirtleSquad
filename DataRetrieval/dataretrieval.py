@@ -57,7 +57,7 @@ class DataRetrieval:
                             "value": data,
                             "timeStamp": message["timeStamp"]}
                     mssg = json.dumps(mssg)
-                    self.publish_message(message = mssg, topic = 'modelexecution')
+                    self.publish_message(message = mssg, topic = 'DataRetrieval')
                     print("Data sent for model execution...")
                 except Exception as e:
                     print(e)
