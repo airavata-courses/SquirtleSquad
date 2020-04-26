@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: dataretrieval
+spec:
+   ports:
+    - port: 8083
+      protocol: TCP
+      targetPort: 8083
+   selector:
+      app: dataretrieval
+   type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: dataretrieval
+   labels:
+      app: dataretrieval
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         app: dataretrieval
+   template:
+      metadata:
+         labels:
+            app: dataretrieval
+      spec:
+         containers:
+            - name: dataretrieval-kubernetes
+            # replace <image-tag> with your actual image
+              image: maxprimex123/squirtlesquad_dataretrieval:latest
+              ports:
+                - containerPort: 8083
