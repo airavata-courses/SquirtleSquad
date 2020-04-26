@@ -1,6 +1,18 @@
 pipeline {
    agent any
    stages {
+
+        stage('Build') {
+            steps {
+                sh 'echo "printing the build meter"'
+                sh '''
+                    echo "test"
+                    ls -lah
+                '''
+                }
+            }
+        }
+
         stage('Building SessionManagement Service') {
             steps {
                 dir('SessionManagement/') {
@@ -8,7 +20,7 @@ pipeline {
                        docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest .
                        docker push maxprimex123/squirtlesquad_sessionmanagement:latest
                        '''
-                }   
+                }
             }
         }
 
@@ -16,10 +28,10 @@ pipeline {
             steps {
                 dir('/UserManagement/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_usermanagement:latest . 
+                       docker build -t maxprimex123/squirtlesquad_usermanagement:latest .
                        docker push maxprimex123/squirtlesquad_usermanagement:latest
                        '''
-                }   
+                }
             }
         }
 
@@ -27,10 +39,10 @@ pipeline {
             steps {
                 dir('/APIGateway/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_apigateway:latest . 
+                       docker build -t maxprimex123/squirtlesquad_apigateway:latest .
                        docker push maxprimex123/squirtlesquad_apigateway:latest
                        '''
-                }   
+                }
             }
         }
 
@@ -41,7 +53,7 @@ pipeline {
                        docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
                        docker push maxprimex123/squirtlesquad_modelexecution:latest
                        '''
-                }   
+                }
             }
         }
 
@@ -52,11 +64,11 @@ pipeline {
                        docker build -t maxprimex123/squirtlesquad_inferece:latest .
                        docker push maxprimex123/squirtlesquad_inference:latest
                        '''
-                }   
+                }
             }
         }
-   
-      
+
+
         stage('Deploy to K8s'){
             steps{
                 dir('/Kubes2/') {
@@ -81,6 +93,6 @@ pipeline {
                     '''
                 }
             }
-        }   
+        }
     }
 }
