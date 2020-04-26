@@ -5,5 +5,6 @@ RUN chmod +x /wait
 RUN pip install kafka-python
 RUN pip install matplotlib
 WORKDIR /Inference
+ENV PYTHONUNBUFFERED=1
 CMD ["python", "Inference.py"]
 

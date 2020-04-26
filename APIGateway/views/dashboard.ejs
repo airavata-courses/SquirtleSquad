@@ -16,7 +16,7 @@
       <div class="file-field input-field"></div>
         <label for="models" style="display: block">Choose a model:</label><br>
       </div>
-      <select id="state" name="state" style="display: block;">
+      <select id="state" name="state" onchange="setState();" style="display: block;">
         <option value="---">---</option>
         <option value="Alabama">Alabama</option>
         <option value="Alaska">Alaska</option>
@@ -91,7 +91,7 @@
 
   <script>
 function loadDoc() {
-  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
+  var url = document.location.protocol + "//" + document.location.hostname + ":30000";
   console.log(url);
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -105,8 +105,8 @@ function loadDoc() {
 
 var val = document.getElementById('state').value;
 
-function setSate() {
-  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
+function setState() {
+  var url = document.location.protocol + "//" + document.location.hostname + ":30000";
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -114,6 +114,7 @@ function setSate() {
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
+  console.log("Setting State: ", document.getElementById("state").value);
   xhttp.open("POST", url + "/users/setState?value="+document.getElementById("state").value, true);
   xhttp.send();
 }
@@ -131,7 +132,7 @@ function logout(){
 }
 
 function getPlot(){
-  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
+  var url = document.location.protocol + "//" + document.location.hostname + ":30000";
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -146,7 +147,7 @@ function getPlot(){
 }
 
 function getModel(){
-  var url = document.location.protocol + "//" + document.location.hostname + ":8080";
+  var url = document.location.protocol + "//" + document.location.hostname + ":30000";
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
