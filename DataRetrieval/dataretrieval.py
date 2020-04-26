@@ -28,10 +28,9 @@ class DataRetrieval:
             exclude=[weather.MINUTELY, weather.ALERTS], 
             timezone='UTC'
         )
-
         current = forecast.currently
         mssg = {'summary':current.summary, 
-                'windSpeed':current.windSpeed,
+                'windSpeed':current.wind_speed,
                 'humidity':current.humidity,
                 'temperature':current.temperature}
         return mssg
@@ -45,7 +44,7 @@ class DataRetrieval:
             if len(mssg) > 0:
                 try:
                     message = json.loads(mssg.value)
-                    print("Recieved Message..", message)
+                    print("Recieved Message:", message)
                     data = json.loads(message['value'])
                     data = self.extract_data(data)
                     data = json.dumps(data)
@@ -71,5 +70,6 @@ if __name__ == "__main__":
     DATARET = DataRetrieval()
     print("Consumer started..")
     DATARET.getData()
+   
 
 
