@@ -46,7 +46,7 @@ class DataRetrieval:
                 try:
                     message = json.loads(mssg.value)
                     print("Recieved Message..")
-                    data = self.extract_data(message)
+                    data = self.extract_data(message['value'])
                     data = json.dumps(data)
                     print("Information extracted")
                     #Since we need to pass the message to the next API call, we
