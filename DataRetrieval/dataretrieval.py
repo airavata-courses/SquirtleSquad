@@ -1,5 +1,6 @@
 from kafka import KafkaProducer, KafkaConsumer
-from forecastiopy import *
+from darksky.api import DarkSky, DarkSkyAsync
+from darksky.types import languages, units, weather
 import json
 
 
@@ -16,10 +17,19 @@ class DataRetrieval:
         self.producer.flush()
 
     def extract_data(self, message):
-        latitude = message['latitiude']
-        longitude = message['longitude']
-        fio = ForecastIO.ForecastIO("68a391b503f11aa6fa13d405bfefdaba", latitude=latitude, longitude=longitude)
-        current = FIOCurrently.FIOCurrently(fio)
+        darksky = DarkSky("68a391b503f11aa6fa13d405bfefdaba")
+        latitude = latitude
+        longitude = longitude
+        forecast = darksky.get_forecast(
+            latitude, longitude,
+            extend=False, # default `False`
+            lang=languages.ENGLISH, # default `ENGLISH`
+            values_units=units.AUTO, # default `auto`
+            exclude=[weather.MINUTELY, weather.ALERTS], # default `[]`,
+            timezone='UTC' # default None - will be set by DarkSky API automatically
+        )
+        
+        current = forecast.currently
         mssg = {'summary':current.summary, 
                 'windSpeed':current.windSpeed,
                 'humidity':current.humidity,
