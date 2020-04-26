@@ -45,7 +45,7 @@ class DataRetrieval:
             if len(mssg) > 0:
                 try:
                     message = json.loads(mssg.value)
-                    print("Recieved Message..")
+                    print("Recieved Message..", message)
                     data = self.extract_data(message['value'])
                     data = json.dumps(data)
                     print("Information extracted")
