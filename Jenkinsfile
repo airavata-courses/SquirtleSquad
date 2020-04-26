@@ -7,8 +7,6 @@ pipeline {
                       sudo apt --assume-yes install docker.io
                       sudo systemctl start docker
                       sudo systemctl enable docker
-                      python -m pip uninstall -y urllib3
-                      python -m pip install urllib3==1.22
                   '''
                }
         }
@@ -28,8 +26,9 @@ pipeline {
             steps {
                 dir('SessionManagement/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest .
-                       docker push maxprimex123/squirtlesquad_sessionmanagement:latest
+                       sudo docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest .
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo docker push maxprimex123/squirtlesquad_sessionmanagement:latest
                        '''
                 }
             }
@@ -39,8 +38,9 @@ pipeline {
             steps {
                 dir('/UserManagement/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_usermanagement:latest .
-                       docker push maxprimex123/squirtlesquad_usermanagement:latest
+                       sudo docker build -t maxprimex123/squirtlesquad_usermanagement:latest .
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo docker push maxprimex123/squirtlesquad_usermanagement:latest
                        '''
                 }
             }
@@ -50,8 +50,9 @@ pipeline {
             steps {
                 dir('/APIGateway/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_apigateway:latest .
-                       docker push maxprimex123/squirtlesquad_apigateway:latest
+                       sudo docker build -t maxprimex123/squirtlesquad_apigateway:latest .
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo docker push maxprimex123/squirtlesquad_apigateway:latest
                        '''
                 }
             }
@@ -61,8 +62,9 @@ pipeline {
             steps {
                 dir('/ModelExecution/') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
-                       docker push maxprimex123/squirtlesquad_modelexecution:latest
+                       sudo docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo docker push maxprimex123/squirtlesquad_modelexecution:latest
                        '''
                 }
             }
@@ -72,8 +74,9 @@ pipeline {
             steps {
                 dir('/Inference') {
                        sh '''
-                       docker build -t maxprimex123/squirtlesquad_inferece:latest .
-                       docker push maxprimex123/squirtlesquad_inference:latest
+                       sudo docker build -t maxprimex123/squirtlesquad_inferece:latest .
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo docker push maxprimex123/squirtlesquad_inference:latest
                        '''
                 }
             }
