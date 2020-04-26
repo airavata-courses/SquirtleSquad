@@ -18,17 +18,17 @@ class DataRetrieval:
 
     def extract_data(self, message):
         darksky = DarkSky("68a391b503f11aa6fa13d405bfefdaba")
-        latitude = latitude
-        longitude = longitude
+        latitude = message['latitude']
+        longitude = message['longitude']
         forecast = darksky.get_forecast(
             latitude, longitude,
-            extend=False, # default `False`
-            lang=languages.ENGLISH, # default `ENGLISH`
-            values_units=units.AUTO, # default `auto`
-            exclude=[weather.MINUTELY, weather.ALERTS], # default `[]`,
-            timezone='UTC' # default None - will be set by DarkSky API automatically
+            extend=False, 
+            lang=languages.ENGLISH,
+            values_units=units.AUTO, 
+            exclude=[weather.MINUTELY, weather.ALERTS], 
+            timezone='UTC'
         )
-        
+
         current = forecast.currently
         mssg = {'summary':current.summary, 
                 'windSpeed':current.windSpeed,
