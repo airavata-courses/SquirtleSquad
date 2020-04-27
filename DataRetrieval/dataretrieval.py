@@ -51,13 +51,13 @@ class DataRetrieval:
                     print("Information extracted")
                     #Since we need to pass the message to the next API call, we
                     #need to change the mssage parameters and convert mssg back from json object to string
-                    mssg = {"sessID": message["SessID"],
-                            "userID": message["UserID"],
+                    mssg = {"sessID": message["sessID"],
+                            "userID": message["userID"],
                             "action": "modelexecution",
                             "value": data,
                             "timeStamp": message["timeStamp"]}
                     mssg = json.dumps(mssg)
-                    self.publish_message(message = mssg, topic = 'DataRetrieval')
+                    self.publish_message(message = mssg, topic = 'dataretrieval')
                     print("Data sent for model execution...")
                 except Exception as e:
                     print(e)

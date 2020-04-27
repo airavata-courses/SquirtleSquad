@@ -19,8 +19,7 @@ pipeline {
                     ls -lah
                 '''
                 }
-            }
-        }
+        } 
 
         stage('Building SessionManagement Service') {
             steps {
@@ -70,7 +69,7 @@ pipeline {
             }
         }
 
-        stage('Build PostAnalysis Service') {
+        stage('Build Inference Service') {
             steps {
                 dir('/Inference') {
                        sh '''
@@ -82,8 +81,12 @@ pipeline {
             }
         }
 
+<<<<<<< HEAD
 
+        stage('Deploying to Kubernetes'){
+=======
         stage('Deploy to K8s'){
+>>>>>>> c80b158bfa44b7b92264b52fb6205749fc53de06
             steps{
                 dir('/Kubes2/') {
                     sh '''
@@ -108,5 +111,4 @@ pipeline {
                 }
             }
         }
-    }
 }

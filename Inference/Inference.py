@@ -24,7 +24,7 @@ class Inference:
         consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers = 'kafka-service:9092',
                                  group_id=None)
-        print("Consumer running..")
+        print("Consumer running..",self.topic)
         for mssg in consumer:
             if len(mssg)>0:
                 try:
