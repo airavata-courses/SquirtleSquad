@@ -28,10 +28,9 @@ class DataRetrieval:
             exclude=[weather.MINUTELY, weather.ALERTS], 
             timezone='UTC'
         )
-
         current = forecast.currently
         mssg = {'summary':current.summary, 
-                'windSpeed':current.windSpeed,
+                'windSpeed':current.wind_speed,
                 'humidity':current.humidity,
                 'temperature':current.temperature}
         return mssg
@@ -45,20 +44,20 @@ class DataRetrieval:
             if len(mssg) > 0:
                 try:
                     message = json.loads(mssg.value)
-                    print("Recieved Message..", message)
+                    print("Recieved Message:", message)
                     data = json.loads(message['value'])
                     data = self.extract_data(data)
                     data = json.dumps(data)
                     print("Information extracted")
                     #Since we need to pass the message to the next API call, we
                     #need to change the mssage parameters and convert mssg back from json object to string
-                    mssg = {"sessID": message["SessID"],
-                            "userID": message["UserID"],
+                    mssg = {"sessID": message["sessID"],
+                            "userID": message["userID"],
                             "action": "modelexecution",
                             "value": data,
                             "timeStamp": message["timeStamp"]}
                     mssg = json.dumps(mssg)
-                    self.publish_message(message = mssg, topic = 'modelexecution')
+                    self.publish_message(message = mssg, topic = 'dataretrieval')
                     print("Data sent for model execution...")
                 except Exception as e:
                     print(e)
@@ -71,5 +70,6 @@ if __name__ == "__main__":
     DATARET = DataRetrieval()
     print("Consumer started..")
     DATARET.getData()
+   
 
 

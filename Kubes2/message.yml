@@ -9,7 +9,6 @@ spec:
     targetPort: 9092
   selector:
     app: kafka
-  type: LoadBalancer
 
 ---
 
@@ -56,7 +55,7 @@ spec:
         - name: KAFKA_BROKER_ID
           value: "0"
         - name : KAFKA_CREATE_TOPICS
-          value : "addAction:1:1,apigateway:1:1,DataRetrieval:1:1,postanalysis:1:1" 
+          value : "addAction:1:1,apigateway:1:1,dataretrieval:1:1,postanalysis:1:1,modelexecution:1:1" 
 
 ---
 apiVersion: apps/v1

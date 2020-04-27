@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: modelexecution
+spec:
+   ports:
+    - port: 8084
+      protocol: TCP
+      targetPort: 8084
+   selector:
+      app: modelexecution
+   type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: modelexecution
+   labels:
+      app: modelexecution
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         app: modelexecution
+   template:
+      metadata:
+         labels:
+            app: modelexecution
+      spec:
+         containers:
+            - name: modelexecution-kubernetes
+            # replace <image-tag> with your actual image
+              image: maxprimex123/squirtlesquad_modelexecution:latest
+              ports:
+                - containerPort: 8084

@@ -82,8 +82,12 @@ pipeline {
             }
         }
 
+<<<<<<< HEAD
 
         stage('Deploying to Kubernetes'){
+=======
+        stage('Deploy to K8s'){
+>>>>>>> c80b158bfa44b7b92264b52fb6205749fc53de06
             steps{
                 dir('/Kubes2/') {
                     sh '''
