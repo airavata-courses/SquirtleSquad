@@ -70,7 +70,7 @@ pipeline {
             }
         }
 
-        stage('Build PostAnalysis Service') {
+        stage('Build Inference Service') {
             steps {
                 dir('/Inference') {
                        sh '''
@@ -83,7 +83,7 @@ pipeline {
         }
 
 
-        stage('Deploy to K8s'){
+        stage('Deploying to Kubernetes'){
             steps{
                 dir('/Kubes2/') {
                     sh '''
@@ -108,5 +108,4 @@ pipeline {
                 }
             }
         }
-    }
 }
