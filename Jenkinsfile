@@ -19,7 +19,8 @@ pipeline {
                     ls -lah
                 '''
                 }
-        } 
+            }
+        
 
         stage('Building SessionManagement Service') {
             steps {
@@ -107,4 +108,5 @@ pipeline {
                 }
             }
         }
+    }
 }
