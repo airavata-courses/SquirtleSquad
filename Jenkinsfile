@@ -4,7 +4,7 @@ pipeline {
        stage('Install docker'){
            steps{
                sh '''
-                      sudo apt-get install -y docker.io
+                      sudo -n apt-get install -y docker.io
                       sudo systemctl start docker
                       sudo systemctl enable docker
                   '''
@@ -15,7 +15,7 @@ pipeline {
             steps {
                 sh 'echo "printing the build meter"'
                 sh '''
-                    echo "test"
+                    echo "test work!"
                     ls -lah
                 '''
                 }
