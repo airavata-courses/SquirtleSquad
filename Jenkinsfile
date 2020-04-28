@@ -4,7 +4,7 @@ pipeline {
        stage('Install docker'){
            steps{
                sh '''
-                      sudo -n apt-get install -y docker.io
+                      apt-get install -y docker.io
                       sudo systemctl start docker
                       sudo systemctl enable docker
                   '''
