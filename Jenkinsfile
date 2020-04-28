@@ -4,7 +4,7 @@ pipeline {
        stage('Install docker'){
            steps{
                sh '''
-                      sudo apt --assume-yes install docker.io
+                      sudo apt-get install -y docker.io
                       sudo systemctl start docker
                       sudo systemctl enable docker
                   '''
@@ -20,7 +20,7 @@ pipeline {
                 '''
                 }
             }
-        
+
 
         stage('Building SessionManagement Service') {
             steps {
@@ -108,5 +108,4 @@ pipeline {
                 }
             }
         }
-    }
 }
