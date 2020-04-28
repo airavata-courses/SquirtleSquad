@@ -27,6 +27,7 @@ pipeline {
                 dir('SessionManagement/') {
                        sh '''
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo npm install -g nodemon
                        sudo docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest .
                        sudo docker push maxprimex123/squirtlesquad_sessionmanagement:latest
                        '''
