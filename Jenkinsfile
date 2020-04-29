@@ -89,8 +89,6 @@ pipeline {
                 dir('Kubes2/') {
                     sh '''
                     sudo ssh  -i id_rsa ubuntu@149.165.171.111
-                    sudo apt install git -y
-                    git clone https://github.com/airavata-courses/SquirtleSquad
                     cd SquirtleSquad
                     git checkout dockerized_services
                     cd Kubes2/
