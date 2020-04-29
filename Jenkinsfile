@@ -88,19 +88,19 @@ pipeline {
             steps{
                 dir('Kubes2/') {
                     sh '''
-                    sudo ssh  -i id_rsa ubuntu@149.165.171.111
-                    cd SquirtleSquad
-                    git checkout dockerized_services
-                    cd Kubes2/
-                    ls
-                    kubectl apply -f message.yml
-                    kubectl apply -f apigateway.yml
-                    kubectl apply -f usermanagement.yml
-                    kubectl apply -f sessionmanagement.yml
-                    kubectl apply -f dataretrieval.yml
-                    kubectl apply -f modelexecution.yml
-                    kubectl apply -f inference.yml
-                    kubectl scale deployment/apigateway deployment/usermanagement deployment/sessionmanagement deployment/dataretrieval deployment/modelexecution deployment/inference --replicas=3
+                    sudo ssh  -i id_rsa ubuntu@149.165.171.111 &&
+                    cd SquirtleSquad &&
+                    git checkout dockerized_services &&
+                    cd Kubes2/ &&
+                    ls &&
+                    kubectl apply -f message.yml &&
+                    kubectl apply -f apigateway.yml &&
+                    kubectl apply -f usermanagement.yml &&
+                    kubectl apply -f sessionmanagement.yml &&
+                    kubectl apply -f dataretrieval.yml &&
+                    kubectl apply -f modelexecution.yml &&
+                    kubectl apply -f inference.yml &&
+                    kubectl scale deployment/apigateway deployment/usermanagement deployment/sessionmanagement deployment/dataretrieval deployment/modelexecution deployment/inference --replicas=3 &&
                     '''
                 }
             }
