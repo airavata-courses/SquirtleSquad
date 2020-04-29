@@ -40,7 +40,6 @@ pipeline {
                 dir('UserManagement/') {
                        sh '''
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
                        sudo docker build -t maxprimex123/squirtlesquad_usermanagement:latest .
                        sudo docker push maxprimex123/squirtlesquad_usermanagement:latest
                        '''
@@ -53,7 +52,6 @@ pipeline {
                 dir('APIGateway/') {
                        sh '''
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
                        sudo docker build -t maxprimex123/squirtlesquad_apigateway:latest .
                        sudo docker push maxprimex123/squirtlesquad_apigateway:latest
                        '''
@@ -66,7 +64,6 @@ pipeline {
                 dir('ModelExecution/') {
                        sh '''
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
                        sudo docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
                        sudo docker push maxprimex123/squirtlesquad_modelexecution:latest
                        '''
@@ -79,7 +76,6 @@ pipeline {
                 dir('Inference/') {
                        sh '''
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
                        sudo docker build -t maxprimex123/squirtlesquad_inferece:latest .
                        sudo docker push maxprimex123/squirtlesquad_inference:latest
                        '''
