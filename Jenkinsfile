@@ -30,6 +30,7 @@ pipeline {
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
                        sudo docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest .
                        sudo docker push maxprimex123/squirtlesquad_sessionmanagement:latest
+                       cd ../
                        '''
                 }
             }
