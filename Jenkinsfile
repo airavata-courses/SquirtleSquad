@@ -76,7 +76,7 @@ pipeline {
                 dir('Inference/') {
                        sh '''
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo docker build -t maxprimex123/squirtlesquad_inferece:latest .
+                       sudo docker build -t maxprimex123/squirtlesquad_inference:latest .
                        sudo docker push maxprimex123/squirtlesquad_inference:latest
                        '''
                 }
