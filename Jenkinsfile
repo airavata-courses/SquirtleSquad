@@ -91,13 +91,13 @@ pipeline {
                     sudo ssh  -i id_rsa ubuntu@149.165.171.111
                     rm -rf SquirtleSquad
                     sudo apt install gnupg2 pass -y
+                    sudo apt-get install -y kubectl
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
                     sudo apt install git -y
                     git clone https://github.com/airavata-courses/SquirtleSquad.git
                     cd SquirtleSquad
                     git checkout dockerized_services
                     cd Kubes2/
-                    ls
                     kubectl apply -f apigateway.yml
                     kubectl apply -f message.yml
                     kubectl apply -f usermanagement.yml
