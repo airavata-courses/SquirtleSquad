@@ -105,7 +105,6 @@ pipeline {
                     kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f dataretrieval.yml
                     kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f modelexecution.yml
                     kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f inference.yml
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" scale deployment/apigateway deployment/usermanagement deployment/sessionmanagement deployment/dataretrieval deployment/modelexecution deployment/inference --replicas=3
                     '''
                 }
             }
