@@ -89,7 +89,7 @@ pipeline {
                 dir('Kubes2/') {
                     sh '''
                     sudo ssh  -i id_rsa ubuntu@149.165.171.111 &&
-                    "rm -rf SquirtleSquad"&&
+                    rm -rf SquirtleSquad &&
                     sudo apt install gnupg2 pass -y &&
                     sudo docker login --username=maxprimex123 --password=Gorprime1! &&
                     sudo apt install git -y &&
