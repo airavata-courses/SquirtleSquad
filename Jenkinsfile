@@ -98,6 +98,7 @@ pipeline {
                     cd SquirtleSquad
                     git checkout dockerized_services
                     cd Kubes2/
+                    kubectl --kubeconfig="/home/ubuntu/.kube/config"
                     kubectl apply -f apigateway.yml
                     kubectl apply -f message.yml
                     kubectl apply -f usermanagement.yml
