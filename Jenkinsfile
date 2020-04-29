@@ -4,9 +4,10 @@ pipeline {
        stage('Install docker'){
            steps{
                sh '''
-                      sudo -n apt-get install -y docker.io
-                      sudo systemctl start docker
-                      sudo systemctl enable docker
+                    sudo apt-get update
+                    sudo -n apt-get install -y docker.io
+                    sudo systemctl start docker
+                    sudo systemctl enable docker
                   '''
                }
         }
@@ -27,7 +28,6 @@ pipeline {
                 dir('SessionManagement/') {
                        sh '''
                        sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
                        sudo docker build -t maxprimex123/squirtlesquad_sessionmanagement:latest .
                        sudo docker push maxprimex123/squirtlesquad_sessionmanagement:latest
                        '''
