@@ -35,6 +35,45 @@ pipeline {
             }
         }
 
+        stage('Building UserManagement Service') {
+            steps {
+                dir('UserManagement/') {
+                       sh '''
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo apt-get upgrade -y &&
+                       sudo docker build -t maxprimex123/squirtlesquad_usermanagement:latest .
+                       sudo docker push maxprimex123/squirtlesquad_usermanagement:latest
+                       '''
+                }
+            }
+        }
+
+        stage('Building APIGateway Service') {
+            steps {
+                dir('APIGateway/') {
+                       sh '''
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo apt-get upgrade -y &&
+                       sudo docker build -t maxprimex123/squirtlesquad_apigateway:latest .
+                       sudo docker push maxprimex123/squirtlesquad_apigateway:latest
+                       '''
+                }
+            }
+        }
+
+        stage('Building ModelExecution Service') {
+            steps {
+                dir('ModelExecution/') {
+                       sh '''
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo apt-get upgrade -y &&
+                       sudo docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
+                       sudo docker push maxprimex123/squirtlesquad_modelexecution:latest
+                       '''
+                }
+            }
+        }
+
         stage('Build Inference Service') {
             steps {
                 dir('Inference/') {
@@ -48,49 +87,10 @@ pipeline {
             }
         }
 
-        stage('Building UserManagement Service') {
-            steps {
-                dir('/UserManagement/') {
-                       sh '''
-                       sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
-                       sudo docker build -t maxprimex123/squirtlesquad_usermanagement:latest .
-                       sudo docker push maxprimex123/squirtlesquad_usermanagement:latest
-                       '''
-                }
-            }
-        }
-
-        stage('Building APIGateway Service') {
-            steps {
-                dir('/APIGateway/') {
-                       sh '''
-                       sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
-                       sudo docker build -t maxprimex123/squirtlesquad_apigateway:latest .
-                       sudo docker push maxprimex123/squirtlesquad_apigateway:latest
-                       '''
-                }
-            }
-        }
-
-        stage('Building ModelExecution Service') {
-            steps {
-                dir('/ModelExecution/') {
-                       sh '''
-                       sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
-                       sudo docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
-                       sudo docker push maxprimex123/squirtlesquad_modelexecution:latest
-                       '''
-                }
-            }
-        }
-
 
         stage('Deploying to Kubernetes'){
             steps{
-                dir('/Kubes2/') {
+                dir('Kubes2/') {
                     sh '''
                     sudo ssh  -i id_rsa ubuntu@149.165.171.111 &&
                     sudo apt install git -y &&
