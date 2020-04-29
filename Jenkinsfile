@@ -35,6 +35,19 @@ pipeline {
             }
         }
 
+        stage('Build Inference Service') {
+            steps {
+                dir('/Inference') {
+                       sh '''
+                       sudo docker login --username=maxprimex123 --password=Gorprime1!
+                       sudo apt-get upgrade -y &&
+                       sudo docker build -t maxprimex123/squirtlesquad_inferece:latest .
+                       sudo docker push maxprimex123/squirtlesquad_inference:latest
+                       '''
+                }
+            }
+        }
+
         stage('Building UserManagement Service') {
             steps {
                 dir('/UserManagement/') {
@@ -69,19 +82,6 @@ pipeline {
                        sudo apt-get upgrade -y &&
                        sudo docker build -t maxprimex123/squirtlesquad_modelexecution:latest .
                        sudo docker push maxprimex123/squirtlesquad_modelexecution:latest
-                       '''
-                }
-            }
-        }
-
-        stage('Build Inference Service') {
-            steps {
-                dir('/Inference') {
-                       sh '''
-                       sudo docker login --username=maxprimex123 --password=Gorprime1!
-                       sudo apt-get upgrade -y &&
-                       sudo docker build -t maxprimex123/squirtlesquad_inferece:latest .
-                       sudo docker push maxprimex123/squirtlesquad_inference:latest
                        '''
                 }
             }
