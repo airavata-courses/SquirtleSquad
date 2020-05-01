@@ -103,7 +103,6 @@ pipeline {
                     kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f dataretrieval.yml
                     kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f modelexecution.yml
                     kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f inference.yml
-                    echo small commit
                     '''
                 }
             }
