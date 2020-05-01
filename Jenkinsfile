@@ -96,13 +96,13 @@ pipeline {
                     cd SquirtleSquad
                     git checkout dockerized_services
                     cd Kubes2/
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f message.yml 
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f apigateway.yml
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f usermanagement.yml
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f sessionmanagement.yml
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f dataretrieval.yml
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f modelexecution.yml
-                    kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f inference.yml
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f message.yml 
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f apigateway.yml
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f usermanagement.yml
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f sessionmanagement.yml
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f dataretrieval.yml
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f modelexecution.yml
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f inference.yml
                     '''
                 }
             }
