@@ -106,6 +106,7 @@ pipeline {
                     kubectl apply -f modelexecution.yml
                     kubectl apply -f inference.yml
                     kubectl scale deployment/apigateway deployment/usermanagement deployment/sessionmanagement deployment/dataretrieval deployment/modelexecution deployment/inference --replicas=3
+                    
                     '''
                 }
             }
