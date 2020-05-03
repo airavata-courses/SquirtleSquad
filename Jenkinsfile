@@ -9,8 +9,7 @@ pipeline {
                     sudo systemctl start docker
                     sudo systemctl enable docker
                     curl -L https://istio.io/downloadIstio | sh -
-                    cd istio-1.5.2
-                    export PATH=$PATH:$HOME/.istioctl/bin
+                    export PATH="$PATH:/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin"
                     istioctl manifest apply --set profile=demo
                   '''
                }
