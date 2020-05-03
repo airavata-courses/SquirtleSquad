@@ -1,6 +1,6 @@
 #!/bin/bash
 # My first script
-
+#entering valkues for jenkinsa test
 echo "Tunnelling local host now"
 
 cd SquirtleSquad/Kubes2/
