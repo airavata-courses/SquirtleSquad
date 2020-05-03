@@ -32,8 +32,8 @@ spec:
          containers:
             - name: sessionmanagement-kubernetes
               env:
-               -  name: MongoDB__ConnectionStringSession
-                  valueFrom:
+               - name: MongoDB__ConnectionStringSession
+                 valueFrom:
                      secretKeyRef:
                         key: MongoDB__ConnectionStringSession
                         name: ctmd-config-session
