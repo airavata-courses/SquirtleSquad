@@ -10,10 +10,25 @@ sess.use(bodyParser.json());
 const db = require('./config/keys').MongoURI;
 
 //Connect to Mongo
-mongoose.connect(db, { useNewUrlParser: true })
-    .then(() => console.log('Session MongoDB Connected...'))
-    .catch(err => console.log(err));
+// mongoose.connect("mongodb+srv://sathyan:1234@sathyan-cluster-jj8km.mongodb.net/test", { useNewUrlParser: true })
+//     .then(() => console.log('Session MongoDB Connected...'))
+//     .catch(err => console.log(err));
 
+    var connectWithRetry = function() {
+      return mongoose.connect("mongodb+srv://sathyan:1234@sathyan-cluster-jj8km.mongodb.net/test", function(err) {
+        if (err) {
+          console.error('Failed to connect to mongo on startup - retrying in 3 sec', err);
+          setTimeout(connectWithRetry, 3000);
+        }
+        else{
+
+          console.log('Session MongoDB Connected...');
+        }
+      });
+    };
+    connectWithRetry();
+
+    
 const kafka = require('kafka-node'),
     //Producer = kafka.Producer,
     Consumer = kafka.Consumer,
@@ -43,8 +58,25 @@ sess.get('/getSessionID', async(req, res)=>{
   })
 });
 
+sess.get('/loadResult', async(req,res)=>{
+  console.log("sessionManagement: Getting Reult");
+  state = SessionJobs.find({sessID: req.query.sessID, action: "postanalysis"})
+  .then(async (jobs) => {
+    if(jobs.length == 0){
+      console.log("Nothing in LoadResult!");
+      res.send("None");
+    }
+    else
+    {
+      console.log(jobs, jobs.length);
+      console.log("Sending Result");
+      res.send(jobs[0].value);
+    }
+});
+});
+
 sess.get('/getLastSession',async (req, res)=>{
-  console.log("sessionManagement: Getting previous session")
+  console.log("sessionManagement: Getting previous session");
   session = Session.find({userID: req.query.userID}).sort({timeStamp: -1}).limit(2)
             .then(session => {
               console.log("2nd Last Session",session);

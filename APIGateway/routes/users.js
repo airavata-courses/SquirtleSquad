@@ -76,7 +76,7 @@ router.get('/getModel', async(req, res)=>{
         const message = {sessID: authData.sessID, userID: authData._id, action: 'DataRetrieval', value: JSON.stringify(val), timeStamp: Date.now()}
         console.log('Sending Model', message);
         publish('apigateway',message);
-        
+        res.send("Success");
     });
     console.log('Sending Model');
 })
@@ -164,8 +164,25 @@ router.post('/setState', (req,res)=>{
         console.log("Setting State");
         const message = {sessID: authData.sessID, userID: authData._id, action: 'state', value: req.query.value, timeStamp: Date.now()}
         publish('addAction',message);
+        res.send("Message Sent");
     });
 });
 //Uploading files
+
+router.get('/getResult',(req, res)=>{
+    console.log('Getting Latest Result');
+    const token = req.cookies['token'];
+    jwt.verify(token, 'secretkey', async (err, authData) => {
+        if(err){
+            console.log(err);
+            res.sendStatus(403);
+        }
+        console.log(authData._id);
+        const result = await axios.get(`http://sessionmanagement:8082/loadResult?sessID=${authData.sessID}`);
+        //const result = await axios.get(`http://localhost:8082/getLastSession?userID=${authData._id}`);
+        console.log(result.data);
+        res.send(result.data);
+    });
+})
 
 module.exports = router;

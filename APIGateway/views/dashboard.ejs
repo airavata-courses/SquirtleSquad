@@ -74,13 +74,13 @@
         </select><br><br>
       <button onclick="getModel()" class="btn">Submit</button><br><br>
    
-    <button onclick="getPlot()" class="btn">Generate Plot</button><br><br>
+    <button onclick="getResult()" class="btn">Generate Result</button><br><br>
     
     <form action="/users/logout" method="GET">
         <button onclick="logout();" class="btn">Logout</button>
     </form>
     <br>
-    <img id= 'plot'  src="" alt="Red dot" class="responsive-img">
+    <div id ='result'></div>
   </div>
 
   <script
@@ -131,17 +131,20 @@ function logout(){
   // xhttp.send();
 }
 
-function getPlot(){
+function getResult(){
   var url = document.location.protocol + "//" + document.location.hostname + ":30000";
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       //console.log(this.responseText);
-      document.getElementById('plot').setAttribute('src',"data:image/png;base64,"+this.responseText);
+      console.log(this.responseText);
+      var obj = JSON.parse(this.responseText);
+      document.getElementById("result").innerText = 'Summary: ' + obj.summary + '\nWind Speed: ' + obj.windSpeed + 
+                                                    '\nhumidity: ' + obj.humidity + '\ntemperature: '+ obj.temperature;
     }
   };
   //alert(document.getElementById("chooseFileBox").value);
-  xhttp.open("GET", url + "/getplot?value="+document.getElementById("state").value, true);
+  xhttp.open("GET", url + "/users/getResult", true);
   //xhttp.open("GET", "http://localhost:8080/getplot?value="+document.getElementById("chooseFileBox").value, true);
   xhttp.send();
 }
