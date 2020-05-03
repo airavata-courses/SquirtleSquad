@@ -8,7 +8,7 @@ pipeline {
                     sudo -n apt-get install -y docker.io
                     sudo systemctl start docker
                     sudo systemctl enable docker
-                    sudo /var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl manifest apply --kubeconfig="/home/ubuntu/.kube/config" --set profile=demo
+                    export PATH=$PATH:/home/ubuntu/istio-1.5.2/bin
                   '''
                }
         }
@@ -90,13 +90,10 @@ pipeline {
                 dir('Kubes2/') {
                     sh '''
                     sudo ssh  -i id_rsa ubuntu@149.165.171.111
-                    rm -rf SquirtleSquad
                     sudo apt install gnupg2 pass -y
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
-                    git clone https://github.com/airavata-courses/SquirtleSquad.git
-                    PATH=$PATH:/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/
-                    cd SquirtleSquad
                     git checkout dockerized_services
+                    git pull
                     cd Kubes2/
                     sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f message.yml)
                     sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f apigateway.yml)
