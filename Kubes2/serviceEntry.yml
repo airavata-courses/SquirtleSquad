@@ -4,6 +4,7 @@ metadata:
   name: mongo-ext
 spec:
   hosts:
+  - 
   addresses:
   - 0.0.0.0/0
   ports:
