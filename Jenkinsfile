@@ -95,8 +95,7 @@ pipeline {
                     sudo apt install gnupg2 pass -y
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
                     git clone https://github.com/airavata-courses/SquirtleSquad.git
-                    
-                    cd ../SquirtleSquad
+                    cd SquirtleSquad
                     git checkout dockerized_services
                     cd Kubes2/
                     sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f message.yml)
