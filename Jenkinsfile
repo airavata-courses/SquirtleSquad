@@ -90,6 +90,7 @@ pipeline {
                 dir('Kubes2/') {
                     sh '''
                     sudo ssh  -i id_rsa ubuntu@149.165.171.111
+                    export PATH=$PATH:$HOME/.istioctl/bin
                     sudo apt install gnupg2 pass -y
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
                     git checkout dockerized_services
