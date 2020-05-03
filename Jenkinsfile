@@ -98,13 +98,13 @@ pipeline {
                     cd SquirtleSquad
                     git checkout dockerized_services
                     cd Kubes2/
-                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f message.yml)
-                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f apigateway.yml)
-                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f sessionmanagement.yml)
-                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f usermanagement.yml)
-                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f modelexecution.yml)
-                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f dataretrieval.yml)
-                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f inference.yml)"
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl kube-inject -f message.yml)
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl kube-inject -f apigateway.yml)
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl kube-inject -f sessionmanagement.yml)
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl kube-inject -f usermanagement.yml)
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl kube-inject -f modelexecution.yml)
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl kube-inject -f dataretrieval.yml)
+                    sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin/istioctl kube-inject -f inference.yml)
                     '''
                 }
             }
