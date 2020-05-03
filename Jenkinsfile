@@ -10,7 +10,7 @@ pipeline {
                     sudo systemctl enable docker
                     curl -L https://istio.io/downloadIstio | sh -
                     export PATH="$PATH:/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin"
-                    istioctl manifest apply --set profile=demo
+                    istioctl manifest apply --kubeconfig="/home/ubuntu/.kube/config" --set profile=demo
                   '''
                }
         }
