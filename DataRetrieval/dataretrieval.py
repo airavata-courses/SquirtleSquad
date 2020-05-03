@@ -9,7 +9,7 @@ import requests
 class DataRetrieval:
     def __init__(self):
         self.topic = 'apigateway'
-        #self.producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
+        self.producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
 
     def publish_message(self, message, topic, key=None):
         if key:
