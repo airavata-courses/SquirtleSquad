@@ -1,13 +1,17 @@
 pipeline {
    agent any
    stages {
-       stage('Install docker'){
+       stage('Installing Requirements'){
            steps{
                sh '''
                     sudo apt-get update
                     sudo -n apt-get install -y docker.io
                     sudo systemctl start docker
                     sudo systemctl enable docker
+                    curl -L https://istio.io/downloadIstio | sh -
+                    cd istio-1.5.2
+                    export PATH=$PATH:$HOME/.istioctl/bin
+                    istioctl manifest apply --set profile=demo
                   '''
                }
         }
@@ -93,10 +97,7 @@ pipeline {
                     sudo apt install gnupg2 pass -y
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
                     git clone https://github.com/airavata-courses/SquirtleSquad.git
-                    curl -L https://istio.io/downloadIstio | sh -
-                    cd istio-1.5.2
-                    export PATH=$PATH:$HOME/.istioctl/bin
-                    istioctl manifest apply --set profile=demo
+                    
                     cd ../SquirtleSquad
                     git checkout dockerized_services
                     cd Kubes2/
