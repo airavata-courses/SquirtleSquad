@@ -56,7 +56,7 @@ class DataRetrieval:
         print("Consumer running..")
         for mssg in consumer:
             if len(mssg) > 0:
-                try:
+                #try:
                     message = json.loads(mssg.value)
                     print("Recieved Message:", message)
                     data = json.loads(message['value'])
@@ -73,10 +73,10 @@ class DataRetrieval:
                     mssg = json.dumps(mssg)
                     self.publish_message(message = mssg, topic = 'dataretrieval')
                     print("Data sent for model execution...")
-                except Exception as e:
-                    print(e)
-                    print("Data couldn't be recieved again, retry sending again..")
-                    continue
+                #except Exception as e:
+                #    print(e)
+                #    print("Data couldn't be recieved again, retry sending again..")
+                #    continue
 
 
 if __name__ == "__main__":
