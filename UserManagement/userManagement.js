@@ -29,9 +29,24 @@ async function publish(topic, message) {
 const db = require('./config/keys').MongoURI;
 
 //Connect to Mongo
-mongoose.connect(db, { useNewUrlParser: true })
-    .then(() => console.log('User MongoDB Connected...'))
-    .catch(err => console.log(err));
+// mongoose.connect(db, { useNewUrlParser: true })
+//     .then(() => console.log('User MongoDB Connected...'))
+//     .catch(err => console.log(err));
+
+
+    var connectWithRetry = function() {
+        return mongoose.connect(db,{ useNewUrlParser: true }, function(err) {
+          if (err) {
+            console.error('Failed to connect to mongo on startup - retrying in 3 sec', err);
+            setTimeout(connectWithRetry, 3000);
+          }
+          else{
+  
+            console.log('User MongoDB Connected...');
+          }
+        });
+      };
+      connectWithRetry();
 //Post Methods
 //register hsudo npm ndler
 user.post('/register', (req, res) => {
