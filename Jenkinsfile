@@ -93,6 +93,7 @@ pipeline {
                     sudo apt install gnupg2 pass -y
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
                     git clone https://github.com/airavata-courses/SquirtleSquad.git
+                    ls
                     cd istio-1.5.2
                     export PATH=$PATH:$HOME/.istioctl/bin
                     cd ../SquirtleSquad
