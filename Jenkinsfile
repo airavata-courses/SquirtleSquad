@@ -91,7 +91,7 @@ pipeline {
                     sh '''
                     sudo ssh  -i id_rsa ubuntu@149.165.171.111
                     export PATH=$PATH:/var/lib/jenkins/workspace/weatherappCD/istio-1.5.2/bin
-                    istioctl manifest apply --set profile=demo
+                    istioctl manifest --kubeconfig="/home/ubuntu/.kube/config" apply --set profile=demo
                     sudo apt install gnupg2 pass -y
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
                     git checkout dockerized_services
