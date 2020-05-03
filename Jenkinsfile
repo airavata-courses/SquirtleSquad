@@ -94,7 +94,6 @@ pipeline {
                     sudo docker login --username=maxprimex123 --password=Gorprime1!
                     git checkout dockerized_services
                     git pull
-                    cd Kubes2/
                     sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f message.yml)
                     sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f apigateway.yml)
                     sudo kubectl --kubeconfig="/home/ubuntu/.kube/config" apply -f <(istioctl kube-inject -f sessionmanagement.yml)
