@@ -1,4 +1,7 @@
 kubectl delete deployment,svc --all
+kubectl apply -f serviceEntry.yml
+kubectl apply -f gateway.yml
+kubectl apply -f virtualService.yml
 kubectl apply -f <(istioctl kube-inject -f message.yml)
 kubectl apply -f <(istioctl kube-inject -f apigateway.yml)
 kubectl delete secret ctmd-config
