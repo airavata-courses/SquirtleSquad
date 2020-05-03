@@ -32,11 +32,11 @@ spec:
          containers:
             - name: usermanagement-kubernetes
               env:
-              -  name: MongoDB__ConnectionStringUser
+               - name: MongoDB__ConnectionStringUser
                  valueFrom:
-                    secretKeyRef:
-                      key: MongoDB__ConnectionStringUser
-                      name: ctmd-config-user
+                     secretKeyRef:
+                        key: MongoDB__ConnectionStringUser
+                        name: ctmd-config-user
               # replace <image-tag> with your actual image
               image: maxprimex123/squirtlesquad_usermanagement:latest
               ports:
