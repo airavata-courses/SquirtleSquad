@@ -19,10 +19,10 @@ class DataRetrieval:
         self.producer.flush()
 
     def extract_data(self, message):
-
-        responseDark = requests.get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/10,-10")
-        print(responseDark.status_code)
-        if ( responseDark.status_code != 200 ):
+        try:
+            responseDark = requests.get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/10,-10")
+        except Exception as e:
+            print(responseDark.status_code)
             mssg = {'summary':'overcast',
                     'windSpeed':12,
                     'humidity':78,
@@ -33,8 +33,6 @@ class DataRetrieval:
         darksky = DarkSky("68a391b503f11aa6fa13d405bfefdaba")
         latitude = message['latitude']
         longitude = message['longitude']
-
-        #
 
         forecast = darksky.get_forecast(
             latitude, longitude,
