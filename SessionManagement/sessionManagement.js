@@ -9,11 +9,6 @@ sess.use(bodyParser.json());
 //DB config
 const db = require('./config/keys').MongoURI;
 
-//Connect to Mongo
-// mongoose.connect("mongodb+srv://sathyan:1234@sathyan-cluster-jj8km.mongodb.net/test", { useNewUrlParser: true })
-//     .then(() => console.log('Session MongoDB Connected...'))
-//     .catch(err => console.log(err));
-
     var connectWithRetry = function() {
       return mongoose.connect("mongodb+srv://sathyan:1234@sathyan-cluster-jj8km.mongodb.net/test", function(err) {
         if (err) {
