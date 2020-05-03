@@ -2,12 +2,14 @@ from kafka import KafkaProducer, KafkaConsumer
 from darksky.api import DarkSky, DarkSkyAsync
 from darksky.types import languages, units, weather
 import json
+# new additions packages to be installed on docker and kubernetes
+import requests
 
 
 class DataRetrieval:
     def __init__(self):
         self.topic = 'apigateway'
-        self.producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
+        #self.producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
 
     def publish_message(self, message, topic, key=None):
         if key:
@@ -17,19 +19,33 @@ class DataRetrieval:
         self.producer.flush()
 
     def extract_data(self, message):
+
+        responseDark = requests.get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/10,-10")
+        print(responseDark.status_code)
+        if ( responseDark.status_code != 200 ):
+            mssg = {'summary':'overcast',
+                    'windSpeed':12,
+                    'humidity':78,
+                    'temperature':42}
+            print(mssg)
+            return mssg
+
         darksky = DarkSky("68a391b503f11aa6fa13d405bfefdaba")
         latitude = message['latitude']
         longitude = message['longitude']
+
+        #
+
         forecast = darksky.get_forecast(
             latitude, longitude,
-            extend=False, 
+            extend=False,
             lang=languages.ENGLISH,
-            values_units=units.AUTO, 
-            exclude=[weather.MINUTELY, weather.ALERTS], 
+            values_units=units.AUTO,
+            exclude=[weather.MINUTELY, weather.ALERTS],
             timezone='UTC'
         )
         current = forecast.currently
-        mssg = {'summary':current.summary, 
+        mssg = {'summary':current.summary,
                 'windSpeed':current.wind_speed,
                 'humidity':current.humidity,
                 'temperature':current.temperature}
@@ -68,8 +84,7 @@ class DataRetrieval:
 if __name__ == "__main__":
     print("Staring Data Retrieval Service")
     DATARET = DataRetrieval()
-    print("Consumer started..")
+    #print("Consumer started..")
     DATARET.getData()
-   
-
-
+    #values = { 'latitude' : 23 , 'longitude' : 32 }
+    #DATARET.extract_data(message=values)
