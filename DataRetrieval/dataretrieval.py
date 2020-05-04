@@ -40,7 +40,7 @@ class DataRetrieval:
                     'temperature':current.temperature}
             return mssg
 
-        except darksky.exceptions.DarkSkyException as e:
+        except Exception as e:
             print(e)
             mssg = {'summary':'overcast',
                     'windSpeed':12,
@@ -82,9 +82,9 @@ class DataRetrieval:
 
 
 if __name__ == "__main__":
-    print("Staring Data Retrieval Service")
+    print("Starting Data Retrieval Service")
     DATARET = DataRetrieval()
-    #print("Consumer started..")
+    print("Consumer started..")
     DATARET.getData()
     #values = { 'latitude' : 23 , 'longitude' : 32 }
     #DATARET.extract_data(message=values)
