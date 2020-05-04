@@ -84,7 +84,7 @@ class DataRetrieval:
 if __name__ == "__main__":
     print("Starting Data Retrieval Service")
     DATARET = DataRetrieval()
-    print("Consumer started..")
+    print("Consumer started...")
     DATARET.getData()
     #values = { 'latitude' : 23 , 'longitude' : 32 }
     #DATARET.extract_data(message=values)
