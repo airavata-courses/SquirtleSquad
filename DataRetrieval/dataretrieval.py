@@ -21,7 +21,7 @@ class DataRetrieval:
     def extract_data(self, message):
         try:
             responseDark = requests.get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/10,-10")
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             print(responseDark.status_code)
             mssg = {'summary':'overcast',
                     'windSpeed':12,
