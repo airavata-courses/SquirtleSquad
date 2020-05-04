@@ -21,8 +21,27 @@ class DataRetrieval:
     def extract_data(self, message):
         try:
             responseDark = requests.get("https://api.darksky.net/forecast/68a391b503f11aa6fa13d405bfefdaba/10,-10")
-        except requests.exceptions.RequestException as e:
-            print(responseDark.status_code)
+            darksky = DarkSky("68a391b503f11aa6fa13d405bfefdaba")
+            latitude = message['latitude']
+            longitude = message['longitude']
+
+            forecast = darksky.get_forecast(
+                latitude, longitude,
+                extend=False,
+                lang=languages.ENGLISH,
+                values_units=units.AUTO,
+                exclude=[weather.MINUTELY, weather.ALERTS],
+                timezone='UTC'
+            )
+            current = forecast.currently
+            mssg = {'summary':current.summary,
+                    'windSpeed':current.wind_speed,
+                    'humidity':current.humidity,
+                    'temperature':current.temperature}
+            return mssg
+
+        except darksky.exceptions.DarkSkyException as e:
+            print(e)
             mssg = {'summary':'overcast',
                     'windSpeed':12,
                     'humidity':78,
@@ -30,24 +49,7 @@ class DataRetrieval:
             print(mssg)
             return mssg
 
-        darksky = DarkSky("68a391b503f11aa6fa13d405bfefdaba")
-        latitude = message['latitude']
-        longitude = message['longitude']
-
-        forecast = darksky.get_forecast(
-            latitude, longitude,
-            extend=False,
-            lang=languages.ENGLISH,
-            values_units=units.AUTO,
-            exclude=[weather.MINUTELY, weather.ALERTS],
-            timezone='UTC'
-        )
-        current = forecast.currently
-        mssg = {'summary':current.summary,
-                'windSpeed':current.wind_speed,
-                'humidity':current.humidity,
-                'temperature':current.temperature}
-        return mssg
+        
 
     def getData(self):
         consumer = KafkaConsumer(self.topic,
