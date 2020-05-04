@@ -10,11 +10,10 @@
 </head>
 <body>
   <div class="container">
-    <h1>Choose a File</h1>
+    <h1>Choose a State</h1>
     <%= typeof msg != 'undefined' ? msg : '' %>
     
-      <div class="file-field input-field"></div>
-        <label for="models" style="display: block">Choose a model:</label><br>
+      <div class="file-field input-field"></div><br>
       </div>
       <select id="state" name="state" onchange="setState();" style="display: block;">
         <option value="---">---</option>
@@ -75,12 +74,12 @@
       <button onclick="getModel()" class="btn">Submit</button><br><br>
    
     <button onclick="getResult()" class="btn">Generate Result</button><br><br>
-    
+    <div id ='result'></div>
     <form action="/users/logout" method="GET">
         <button onclick="logout();" class="btn">Logout</button>
     </form>
     <br>
-    <div id ='result'></div>
+    
   </div>
 
   <script
